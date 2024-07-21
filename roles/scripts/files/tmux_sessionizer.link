@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+paths=${TMUX_SESSIONIZER_PATHS}
+
+if [ -z $paths ]; then
+  paths=~/
+  echo "No paths set. Using default: $paths"
+  echo "To change this, set TMUX_SESSIONIZER_PATHS in your .zshrc file"
+fi
+
+if [ $# -eq 1 ]; then
+  selected=$1
+else
+  selected=$(eval find $paths -maxdepth 1 -mindepth 1 -type d | fzf)
+fi
+
+if [ -z $selected ]; then
+  echo "No directory selected"
+  exit 0
+fi
+
+selected_name=$(basename "${selected}" | tr . _)
+tmux_running=$(pgrep tmux)
+
+if [[ -z $tmux_running ]]; then
+  echo "No tmux session running. Starting a new one."
+  tmux new-session -s $selected_name -c "${selected}"
+  exit 0
+fi
+
+if ! tmux has-session -t=$selected_name 2>/dev/null; then
+  echo "No tmux session named ${selected_name}. Starting a new one."
+  tmux new-session -s $selected_name -c "${selected}"
+fi
+
+tmux attach -t $selected_name
+
+echo "You selected: ${selected} - ${selected_name}"

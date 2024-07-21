@@ -1,0 +1,72 @@
+# file: roles/requirements/tasks/main.yml
+- name: Install clang
+  become: true
+  ansible.builtin.apt:
+    name: clang
+    state: present
+
+- name: Install clangd
+  become: true
+  ansible.builtin.apt:
+    name: clangd
+    state: present
+
+- name: Install cmake
+  become: true
+  ansible.builtin.apt:
+    name: cmake
+    state: present
+
+- name: Install curl
+  become: true
+  ansible.builtin.apt:
+    name: curl
+    state: present
+
+- name: Install g++
+  become: true
+  ansible.builtin.apt:
+    name: g++
+    state: present
+
+- name: Install gcc
+  become: true
+  ansible.builtin.apt:
+    name: gcc
+    state: present
+
+- name: Install git
+  become: true
+  ansible.builtin.apt:
+    name: git
+    state: present
+
+- name: Install python3
+  become: true
+  ansible.builtin.apt:
+    name: python3
+    state: present
+
+- name: Install python3-dev
+  become: true
+  ansible.builtin.apt:
+    name: python3-dev
+    state: present
+
+- name: Install python3-pip
+  become: true
+  ansible.builtin.apt:
+    name: python3-pip
+    state: present
+
+- name: Install python3-venv
+  become: true
+  ansible.builtin.apt:
+    name: python3-venv
+    state: present
+
+- name: Install Node.js
+  become: true
+  ansible.builtin.apt:
+    name: nodejs
+    state: present

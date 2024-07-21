@@ -1,0 +1,25 @@
+# file: dotfiles.yml
+- name: Set up Alexander's Environment
+  hosts: local
+  roles:
+    - role: requirements
+      tags:
+        - requirements
+    - role: scripts
+      tags:
+        - scripts
+    - role: i3wm
+      tags:
+        - i3wm
+    - role: kitty
+      tags:
+        - kitty
+    - role: zsh
+      tags:
+        - zsh
+    - role: tmux
+      tags:
+        - tmux
+    - role: neovim
+      tags:
+        - neovim

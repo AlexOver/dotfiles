@@ -1,0 +1,97 @@
+# file: roles/i3wm/tasks/main.yml
+- name: Install i3wm
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: i3
+    state: present
+
+- name: Install i3lock-fancy
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: i3lock-fancy
+    state: present
+
+- name: Install compton
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: compton
+    state: present
+
+- name: Install diodon
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: diodon
+    state: present
+
+- name: Install flameshot
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: flameshot
+    state: present
+
+- name: Install nitrogen
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: nitrogen
+    state: present
+
+- name: Create config directory for i3wm
+  ansible.builtin.file:
+    path: '{{ lookup("env", "HOME") }}/.config/i3'
+    state: directory
+    mode: '0755'
+
+- name: Link config
+  ansible.builtin.file:
+    src: '{{ playbook_dir }}/roles/i3wm/files/config.link'
+    dest: '{{ lookup("env", "HOME") }}/.config/i3/config'
+    state: link
+    force: true
+
+- name: Copy custom config
+  ansible.builtin.copy:
+    src: '{{ playbook_dir }}/roles/i3wm/files/custom.conf'
+    dest: '{{ lookup("env", "HOME") }}/.config/i3/custom.conf'
+    mode: '0644'
+    force: false
+
+- name: Ensure backgrounds directory exists
+  ansible.builtin.file:
+    path: '{{ lookup("env", "HOME") }}/.local/share/backgrounds'
+    state: directory
+    mode: '0755'
+
+- name: Link left background for dual monitors
+  ansible.builtin.file:
+    src: '{{ playbook_dir }}/roles/i3wm/files/Space_expanded.png.link'
+    dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Space_expanded.png'
+    state: link
+    force: true
+
+- name: Link right background for dual monitors
+  ansible.builtin.file:
+    src: '{{ playbook_dir }}/roles/i3wm/files/Stellar_expanded.png.link'
+    dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Stellar_expanded.png'
+    state: link
+    force: true
+
+- name: Check for nitrogen bg-saved.cfg
+  ansible.builtin.stat:
+    path: '{{ lookup("env", "HOME") }}/.config/nitrogen/bg-saved.cfg'
+  register: bgsaved_stat
+
+- name: Set left background for dual monitors
+  ansible.builtin.raw: 'nitrogen --set-zoom-fill --save {{ lookup("env", "HOME") }}/.local/share/backgrounds/Space_expanded.png --head=0'
+  when: not bgsaved_stat.stat.exists
+  changed_when: false
+
+- name: Set left background for dual monitors
+  ansible.builtin.raw: 'nitrogen --set-zoom-fill --save {{ lookup("env", "HOME") }}/.local/share/backgrounds/Stellar_expanded.png --head=1'
+  when: not bgsaved_stat.stat.exists
+  changed_when: false

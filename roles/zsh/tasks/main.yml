@@ -1,0 +1,165 @@
+# file: roles/zsh/tasks/main.yml
+- name: Install ZSH
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: zsh
+    state: present
+
+- name: Install ripgrep
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name: ripgrep
+    state: present
+
+- name: Attempt to set ZSH as default shell for current user
+  become: true
+  become_user: root
+  block:
+    - name: Set ZSH as default shell for current user
+      ansible.builtin.command: usermod -s /bin/zsh {{ lookup('env', 'USER') }}
+      register: zsh_default_shell
+      failed_when: zsh_default_shell.rc >= 1
+      changed_when: zsh_default_shell.rc == 0
+  rescue:
+    - name: Print error message if default shell could not be set | debug
+      ansible.builtin.debug:
+        msg: 'Could not set ZSH as default shell for user {{ lookup("env", "USER") }}. Please set it manually.'
+
+- name: Check for .local/bin directory
+  ansible.builtin.stat:
+    path: "{{ lookup('env', 'HOME') }}/.local/bin"
+  register: local_bin_stat
+
+- name: Create .local/bin directory if missing
+  ansible.builtin.file:
+    path: '{{ lookup("env", "HOME") }}/.local/bin'
+    state: directory
+    mode: '0755'
+  when: not local_bin_stat.stat.exists
+
+- name: Intall JetBrains Mono
+  block:
+    - name: Determine latest Github release of Nerd Fonts
+      ansible.builtin.uri:
+        url: 'https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest'
+        body_format: json
+      register: _nerdfonts_release
+      until: _nerdfonts_release.status == 200
+      retries: 5
+
+    - name: Set nerdfonts_version
+      ansible.builtin.set_fact:
+        nerdfonts_version: '{{ _nerdfonts_release.json.tag_name | regex_replace("^v", "") }}'
+
+    - name: Show latest nerdfonts version
+      ansible.builtin.debug:
+        msg: 'Latest version: {{ nerdfonts_version }}'
+      when: nerdfonts_version is defined
+
+    - name: Ensure fonts directory exists
+      ansible.builtin.file:
+        path: '{{ lookup("env", "HOME") }}/.local/fonts'
+        state: directory
+        mode: '0755'
+
+    - name: Download JetBrains Mono Font
+      ansible.builtin.get_url:
+        url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v{{ nerdfonts_version }}/JetBrainsMono.zip'
+        dest: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}.zip'
+        mode: '0644'
+      when: nerdfonts_version is defined
+
+    - name: Ensure JetBrains Mono directory exists
+      ansible.builtin.file:
+        path: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
+        state: directory
+        mode: '0755'
+
+    - name: Extract JetBrains Mono Font
+      ansible.builtin.unarchive:
+        src: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}.zip'
+        dest: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
+
+    - name: Link Jetbrains Mono Font
+      become: true
+      ansible.builtin.file:
+        src: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
+        dest: '/usr/share/fonts/truetype/cousine'
+        state: link
+        force: true
+
+- name: Attempt to download oh-my-posh
+  block:
+    - name: Determine latest Github release of oh-my-posh
+      ansible.builtin.uri:
+        url: 'https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/releases/latest'
+        body_format: json
+      register: _github_release
+      until: _github_release.status == 200
+      retries: 5
+
+    - name: Set ohmyposh_version
+      ansible.builtin.set_fact:
+        ohmyposh_version: '{{ _github_release.json.tag_name | regex_replace("^v", "") }}'
+
+    - name: Check if oh-my-posh is installed
+      ansible.builtin.stat:
+        path: '{{ lookup("env", "HOME") }}/.local/bin/oh-my-posh'
+      register: ohmyposh_stat
+
+    - name: Determine installed version of oh-my-posh
+      ansible.builtin.command: oh-my-posh --version
+      register: ohmyposh_installed_version
+      when: ohmyposh_stat.stat.exists
+      changed_when: true
+
+    - name: Show installed version of oh-my-posh
+      ansible.builtin.debug:
+        msg: 'Installed version: {{ ohmyposh_installed_version.stdout }}'
+      when: ohmyposh_installed_version.stdout is defined
+
+    - name: Show lastest version of oh-my-posh
+      ansible.builtin.debug:
+        msg: 'Latest version: {{ ohmyposh_version }}'
+      when: ohmyposh_version is defined
+
+    - name: Download and verify SHA256 checksum
+      ansible.builtin.get_url:
+        url: 'https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/posh-linux-amd64'
+        dest: '{{ lookup("env", "HOME") }}/.local/bin/oh-my-posh'
+        checksum: 'sha256:https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/posh-linux-amd64.sha256'
+        mode: '0755'
+      when: (ohmyposh_installed_version.stdout is not defined) or (ohmyposh_installed_version.stdout != ohmyposh_version)
+
+    - name: Ensure oh-my-posh directory exists
+      ansible.builtin.file:
+        path: '{{ lookup("env", "HOME") }}/.config/oh-my-posh'
+        state: directory
+        mode: '0755'
+
+    - name: Copy theme if no theme exists
+      ansible.builtin.copy:
+        src: '{{ playbook_dir }}/roles/zsh/files/slim.json'
+        dest: '{{ lookup("env", "HOME") }}/.config/oh-my-posh/theme.json'
+        mode: '0644'
+        force: false
+
+- name: Link .zshrc
+  ansible.builtin.file:
+    src: '{{ playbook_dir }}/roles/zsh/files/zshrc.link'
+    dest: '{{ lookup("env", "HOME") }}/.zshrc'
+    state: link
+    force: true
+
+- name: Checkout fzf
+  ansible.builtin.git:
+    repo: 'https://github.com/junegunn/fzf.git'
+    depth: 1
+    dest: '{{ lookup("env", "HOME") }}/.fzf'
+    force: true
+
+- name: Install fzf
+  ansible.builtin.raw: '{{ lookup("env", "HOME") }}/.fzf/install --all'
+  changed_when: true

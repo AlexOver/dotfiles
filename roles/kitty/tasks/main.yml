@@ -1,0 +1,38 @@
+# file: roles/vim/tasks/main.yml
+- name: Install kitty | apt
+  become: true
+  become_user: root
+  apt:
+    name: kitty
+    state: present
+
+- name: Check for .config folder | stat
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.config"
+  register: config_stat
+
+- name: Create .config directory if missing | file
+  file:
+    path: '{{ lookup("env", "HOME") }}/.config'
+    state: directory
+    mode: '0755'
+  when: not config_stat.stat.exists
+
+- name: Check for kitty folder | stat
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.config/kitty"
+  register: kitty_stat
+
+- name: Create kitty directory if missing | file
+  file:
+    path: '{{ lookup("env", "HOME") }}/.config/kitty'
+    state: directory
+    mode: '0755'
+  when: not kitty_stat.stat.exists
+
+- name: Link kitty.conf
+  file:
+    src: '{{ playbook_dir }}/roles/kitty/files/kitty.conf.link'
+    dest: '{{ lookup("env", "HOME") }}/.config/kitty/kitty.conf'
+    state: link
+    force: yes

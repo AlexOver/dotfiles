@@ -1,0 +1,58 @@
+PATH=$HOME/.local/bin:$HOME/.local/scripts:$PATH
+
+# Check for and install zinit
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
+
+eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/theme.json)"
+
+# Load plugins
+zinit light Aloxaf/fzf-tab
+zinit light zdharma-continuum/fast-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+
+# Snippets
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+
+autoload -Uz compinit
+compinit
+
+zinit cdreplay -q
+
+# History
+HISTSIZE=100000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
+# Aliases
+alias watch='watch -n 1 '
+alias vim='nvim'
+alias vi='nvim'
+alias nvimdiff='nvim -d'
+alias ll='ls -lh'
+alias l='ls'
+
+# Set clang as default C compiler
+export CC='clang'
+export CXX='clang++'
+
+# Setup for tmux sessionizer
+bindkey -s ^F "tmux_sessionizer\n"
+export TMUX_SESSIONIZER_PATHS=~/dev
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

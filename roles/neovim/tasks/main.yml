@@ -1,0 +1,63 @@
+# file: roles/neovim/tasks/main.yml
+- name: Install Neovim
+  block:
+    - name: Clone/Update Neovim
+      git:
+        repo: 'https://github.com/neovim/neovim.git'
+        dest: '{{ lookup("env", "HOME") }}/.neovim'
+        depth: 1
+        version: 'stable'
+        force: yes
+
+    - name: Install gettext | apt
+      become: yes
+      apt:
+        name: gettext
+        state: present
+
+    - name: Build Neovim
+      command:
+        argv:
+          - 'make'
+          - '-j4'
+          - 'CMAKE_BUILD_TYPE=RelWithDebInfo'
+          - 'CMAKE_INSTALL_PREFIX={{ lookup("env", "HOME") }}/.local'
+        chdir: '{{ lookup("env", "HOME") }}/.neovim'
+
+    - name: Install Neovim
+      command:
+        argv:
+          - 'make'
+          - 'install'
+        chdir: '{{ lookup("env", "HOME") }}/.neovim'
+
+- name: Check for .config folder | stat
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.config"
+  register: config_stat
+
+- name: Create .config directory if missing | file
+  file:
+    path: '{{ lookup("env", "HOME") }}/.config'
+    state: directory
+    mode: '0755'
+  when: not config_stat.stat.exists
+
+- name: Check for nvim folder | stat
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.config/nvim"
+  register: nvim_stat
+
+- name: Clone LazyVim
+  git:
+    repo: 'https://github.com/LazyVim/starter'
+    depth: 1
+    dest: '{{ lookup("env", "HOME") }}/.config/nvim'
+  when: not nvim_stat.stat.exists
+
+- name: Link undotree.lua
+  file:
+    src: '{{ playbook_dir }}/roles/neovim/files/undotree.lua.link'
+    dest: '{{ lookup("env", "HOME") }}/.config/nvim/lua/plugins/undotree.lua'
+    state: link
+    force: yes
