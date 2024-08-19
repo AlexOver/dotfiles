@@ -45,38 +45,38 @@
   ansible.builtin.file:
     path: '{{ lookup("env", "HOME") }}/.config/i3'
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Link config
   ansible.builtin.file:
-    src: '{{ playbook_dir }}/roles/i3wm/files/config.link'
+    src: "{{ playbook_dir }}/roles/i3wm/files/config.link"
     dest: '{{ lookup("env", "HOME") }}/.config/i3/config'
     state: link
     force: true
 
 - name: Copy custom config
   ansible.builtin.copy:
-    src: '{{ playbook_dir }}/roles/i3wm/files/custom.conf'
+    src: "{{ playbook_dir }}/roles/i3wm/files/custom.conf"
     dest: '{{ lookup("env", "HOME") }}/.config/i3/custom.conf'
-    mode: '0644'
+    mode: "0644"
     force: false
 
 - name: Ensure backgrounds directory exists
   ansible.builtin.file:
     path: '{{ lookup("env", "HOME") }}/.local/share/backgrounds'
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Link left background for dual monitors
   ansible.builtin.file:
-    src: '{{ playbook_dir }}/roles/i3wm/files/Space_expanded.png.link'
+    src: "{{ playbook_dir }}/roles/i3wm/files/Space_expanded.png"
     dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Space_expanded.png'
     state: link
     force: true
 
 - name: Link right background for dual monitors
   ansible.builtin.file:
-    src: '{{ playbook_dir }}/roles/i3wm/files/Stellar_expanded.png.link'
+    src: "{{ playbook_dir }}/roles/i3wm/files/Stellar_expanded.png"
     dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Stellar_expanded.png'
     state: link
     force: true

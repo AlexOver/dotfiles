@@ -3,10 +3,10 @@
   block:
     - name: Clone/Update Neovim
       git:
-        repo: 'https://github.com/neovim/neovim.git'
+        repo: "https://github.com/neovim/neovim.git"
         dest: '{{ lookup("env", "HOME") }}/.neovim'
         depth: 1
-        version: 'stable'
+        version: "stable"
         force: yes
 
     - name: Install gettext | apt
@@ -18,17 +18,17 @@
     - name: Build Neovim
       command:
         argv:
-          - 'make'
-          - '-j4'
-          - 'CMAKE_BUILD_TYPE=RelWithDebInfo'
+          - "make"
+          - "-j4"
+          - "CMAKE_BUILD_TYPE=RelWithDebInfo"
           - 'CMAKE_INSTALL_PREFIX={{ lookup("env", "HOME") }}/.local'
         chdir: '{{ lookup("env", "HOME") }}/.neovim'
 
     - name: Install Neovim
       command:
         argv:
-          - 'make'
-          - 'install'
+          - "make"
+          - "install"
         chdir: '{{ lookup("env", "HOME") }}/.neovim'
 
 - name: Check for .config folder | stat
@@ -40,7 +40,7 @@
   file:
     path: '{{ lookup("env", "HOME") }}/.config'
     state: directory
-    mode: '0755'
+    mode: "0755"
   when: not config_stat.stat.exists
 
 - name: Check for nvim folder | stat
@@ -50,14 +50,64 @@
 
 - name: Clone LazyVim
   git:
-    repo: 'https://github.com/LazyVim/starter'
+    repo: "https://github.com/LazyVim/starter"
     depth: 1
     dest: '{{ lookup("env", "HOME") }}/.config/nvim'
   when: not nvim_stat.stat.exists
 
 - name: Link undotree.lua
   file:
-    src: '{{ playbook_dir }}/roles/neovim/files/undotree.lua.link'
+    src: "{{ playbook_dir }}/roles/neovim/files/undotree.lua.link"
     dest: '{{ lookup("env", "HOME") }}/.config/nvim/lua/plugins/undotree.lua'
     state: link
     force: yes
+
+- name: Attempt to download Lazygit
+  block:
+    - name: Determine latest Github release of Lazygit
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/jesseduffield/lazygit/releases/latest"
+        body_format: json
+      register: _github_release
+      until: _github_release.status == 200
+      retries: 5
+
+    - name: Set lazygit_version
+      ansible.builtin.set_fact:
+        lazygit_version: '{{ _github_release.json.tag_name | regex_replace("^v", "") }}'
+
+    - name: Check if Layygit is installed
+      ansible.builtin.stat:
+        path: '{{ lookup("env", "HOME") }}/.local/bin/lazygit'
+      register: lazygit_stat
+
+    - name: Determine installed version of Lazygit
+      ansible.builtin.command: lazygit --version
+      register: lazygit_installed_version_raw
+      when: lazygit_stat.stat.exists
+      changed_when: true
+
+    - name: Extract installed version of Lazygit
+      ansible.builtin.set_fact:
+        lazygit_installed_version: "{{ lazygit_installed_version_raw.stdout | regex_search('version=([0-9.]+)', '\\1') | first }}"
+      when: lazygit_installed_version_raw is defined
+      ignore_errors: true
+
+    - name: Show installed version of Lazygit
+      ansible.builtin.debug:
+        msg: "Installed version: {{ lazygit_installed_version }}"
+      when: lazygit_installed_version is defined
+
+    - name: Show latest version of Lazygit
+      ansible.builtin.debug:
+        msg: "Latest version: {{ lazygit_version }}"
+      when: lazygit_version is defined
+
+    - name: Download Lazygit
+      ansible.builtin.unarchive:
+        src: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_0.43.1_Linux_x86_64.tar.gz"
+        dest: '{{ lookup("env", "HOME") }}/.local/bin'
+        include: "lazygit"
+        mode: "0755"
+        remote_src: true
+      when: (lazygit_installed_version is not defined) or (lazygit_installed_version != lazygit_version)
