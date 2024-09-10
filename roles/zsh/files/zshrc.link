@@ -46,6 +46,7 @@ alias vi='nvim'
 alias nvimdiff='nvim -d'
 alias ll='ls -lh'
 alias l='ls'
+alias icat='kitty icat'
 
 # Set clang as default C compiler
 export CC='clang'

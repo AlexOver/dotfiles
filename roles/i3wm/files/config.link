@@ -211,6 +211,8 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+bindsym $mod+Shift+d exec --no-startup-id nautilus --no-desktop --new-window
+
 include ~/.config/i3/custom.conf
 
 # Start i3bar to display a workspace bar (plus the system information i3status
