@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 paths=${TMUX_SESSIONIZER_PATHS}
+paths=~/Nomono/
 
 if [ -z $paths ]; then
   paths=~/
