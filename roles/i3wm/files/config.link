@@ -56,6 +56,9 @@ bindsym $mod+Return exec kitty
 # kill focused window
 bindsym $mod+Shift+q kill
 
+#add esc to caps lock
+exec --no-startup-id setxkbmap -option caps:escape
+
 # Take a screenshot
 bindsym $mod+Shift+s exec --no-startup-id flameshot gui
 
