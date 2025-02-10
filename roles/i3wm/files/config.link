@@ -25,6 +25,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id compton
 exec --no-startup-id diodon
 exec --no-startup-id nitrogen --restore
+exec --no-startup-id xset r rate 300 50
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status

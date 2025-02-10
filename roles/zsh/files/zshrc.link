@@ -49,6 +49,7 @@ alias ll='ls -lh'
 alias l='ls'
 alias icat='kitty icat'
 alias kssh='kitty +kitten ssh'
+alias lg='lazygit'
 
 # Set clang as default C compiler
 export CC='clang'
