@@ -10,7 +10,7 @@
         force: yes
 
     - name: Install gettext | apt
-      become: yes
+      become: true
       apt:
         name: gettext
         state: present
