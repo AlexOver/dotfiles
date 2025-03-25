@@ -1,0 +1,395 @@
+# file: roles/hyprland/handlers/main.yml
+
+### hyprwayland-scanner
+- name: Generate hyprwayland-scanner build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "-DCMAKE_INSTALL_PREFIX=/usr"
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprwayland-scanner'
+
+- name: Build hyprwayland-scanner
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build build -j `nproc`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprwayland-scanner'
+
+- name: Install hyprwayland-scanner
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprwayland-scanner'
+
+### hyprutils
+- name: Generate hyprutils build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprutils'
+
+- name: Build hyprutils
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprutils'
+
+- name: Install hyprutils
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprutils'
+
+### Aquamarine
+- name: Generate Aquamarine build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/aquamarine'
+
+- name: Build Aquamarine
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/aquamarine'
+
+- name: Install Aquamarine
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/aquamarine'
+
+### hyprlang
+- name: Generate hyprlang build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprlang'
+
+- name: Build hyprlang
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprlang'
+
+- name: Install hyprlang
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprlang'
+
+### hyprcursor
+- name: Generate hyprcursor build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprcursor'
+
+- name: Build hyprcursor
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprcursor'
+
+- name: Install hyprcursor
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprcursor'
+
+### hyprgraphics
+- name: Generate hyprgraphics build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprgraphics'
+
+- name: Build hyprgraphics
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprgraphics'
+
+- name: Install hyprgraphics
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprgraphics'
+
+### Hyprland
+- name: Build Hyprland
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "make"
+      - "all"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/Hyprland'
+
+- name: Install Hyprland
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "make"
+      - "install"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/Hyprland'
+
+### hyprland-protocols
+- name: Generate hyprland-protocols build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "meson"
+      - "setup"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprland-protocols'
+
+- name: Install hyprland-protocols
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "ninja"
+      - "install"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprland-protocols/build'
+
+### hypridle
+- name: Generate hypridle build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hypridle'
+
+- name: Build hypridle
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hypridle'
+
+- name: Install hypridle
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hypridle'
+
+### hyprland-qtutils
+- name: Generate hyprland-qtutils build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprland-qtutils'
+
+- name: Build hyprland-qtutils
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprland-qtutils'
+
+- name: Install hyprland-qtutils
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprland-qtutils'
+
+### hyprlock
+- name: Generate hyprlock build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprlock'
+
+- name: Build hyprlock
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprlock'
+
+- name: Install hyprlock
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprlock'
+
+### hyprpaper
+- name: Generate hyprpaper build files
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--no-warn-unused-cli"
+      - "-DCMAKE_BUILD_TYPE:STRING=Release"
+      - "-DCMAKE_INSTALL_PREFIX:PATH=/usr"
+      - "-S"
+      - "."
+      - "-B"
+      - "./build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprpaper'
+
+- name: Build hyprpaper
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "sh"
+      - "-c"
+      - "cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprpaper'
+
+- name: Install hyprpaper
+  become: true
+  become_user: root
+  changed_when: true
+  ansible.builtin.command:
+    argv:
+      - "cmake"
+      - "--install"
+      - "build"
+    chdir: '{{ lookup("env", "HOME") }}/.hyprland/hyprpaper'
+
+### Hyprshot
+- name: Install Hyprshot
+  changed_when: true
+  ansible.builtin.file:
+    src: '{{ lookup("env", "HOME") }}/.hyprland/Hyprshot/hyprshot'
+    dest: '{{ lookup("env", "HOME") }}/.local/bin/hyprshot'
+    state: link
+    force: true
