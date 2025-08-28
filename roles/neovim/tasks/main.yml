@@ -105,7 +105,7 @@
 
     - name: Download Lazygit
       ansible.builtin.unarchive:
-        src: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_0.43.1_Linux_x86_64.tar.gz"
+        src: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_{{ lazygit_version }}_Linux_x86_64.tar.gz"
         dest: '{{ lookup("env", "HOME") }}/.local/bin'
         include: "lazygit"
         mode: "0755"

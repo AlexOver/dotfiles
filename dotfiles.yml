@@ -23,6 +23,6 @@
     - role: neovim
       tags:
         - neovim
-    - role: hyprland
-      tags:
-        - hyprland
+    # - role: hyprland
+    #   tags:
+    #     - hyprland
