@@ -73,14 +73,14 @@
 - name: Link hyprlock.conf
   ansible.builtin.file:
     src: "{{ playbook_dir }}/roles/hyprland/files/hyprlock.conf.link"
-    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprland.conf'
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprlock.conf'
     state: link
     force: true
 
 - name: Link powermenu.sh
   ansible.builtin.file:
-    src: "{{ playbook_dir }}/roles/hyprland/files/powermenu.sh.link"
-    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprland.conf'
+    src: "{{ playbook_dir }}/roles/hyprland/files/scripts/powermenu.sh.link"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/scripts/powermenu.sh'
     state: link
     force: true
 
