@@ -8,6 +8,7 @@
       - hyprlock
       - hyprpaper
       - hypridle
+      - hyprlauncher
       - xdg-desktop-portal-hyprland
       - wl-clipboard
       - dunst
@@ -15,7 +16,6 @@
       - playerctl
       - brightnessctl
       - network-manager-applet
-      - wofi
     state: present
 
 - name: Install Hyprshot

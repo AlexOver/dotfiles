@@ -8,9 +8,6 @@
     - role: scripts
       tags:
         - scripts
-    # - role: i3wm
-    #   tags:
-    #     - i3wm
     - role: kitty
       tags:
         - kitty

@@ -10,7 +10,7 @@ HOSTS="$ROOTDIR/hosts"
 PLAYBOOK="$ROOTDIR/dotfiles.yml"
 
 # Installs ansible
-sudo pacman -Syu --noconfirm ansible
+#sudo pacman -Syu --noconfirm ansible
 
 # Runs Ansible playbook using our user.
 ansible-playbook -i "$HOSTS" "$PLAYBOOK" --ask-become-pass

@@ -46,3 +46,15 @@
   ansible.builtin.pacman:
     name: nodejs
     state: present
+
+- name: Install zip
+  become: true
+  ansible.builtin.pacman:
+    name: zip
+    state: present
+
+- name: Install unzip
+  become: true
+  ansible.builtin.pacman:
+    name: zip
+    state: present
