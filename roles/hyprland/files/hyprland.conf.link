@@ -6,8 +6,7 @@
 ################
 
 # Default monitor config - customise per-system in custom.conf
-monitor = DP-1, preferred, auto, 1 
-monitor = DP-2, preferred, 0x0, 1 
+monitor = ,preferred, auto, 1 
 
 ###################
 ### MY PROGRAMS ###
@@ -216,3 +215,9 @@ bind = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
 # Mouse bindings for drag/resize
 bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
+
+##################
+# CUSTOM CONFIGS #
+##################
+
+source = ~/.config/hypr/custom.conf
