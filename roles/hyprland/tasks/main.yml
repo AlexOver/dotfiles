@@ -1,235 +1,24 @@
 # file: roles/hyprland/tasks/main.yml
 
-- name: Install/Upgrade dependencies
-  block:
-    - name: Install/update dependencies | package
-      become: true
-      ansible.builtin.package:
-        name:
-          - libpugixml-dev
-          - libpixman-1-dev
-          - libopengl-dev
-          - libglx-dev
-          - libgles-dev
-          - libpam0g-dev
-          - libseat-dev
-          - hwdata
-          - libdisplay-info-dev
-          - libinput-dev
-          - wayland-protocols
-          - libzip-dev
-          - libcairo2-dev
-          - libtomlplusplus-dev
-          - librsvg2-dev
-          - libmagic-dev
-          - libspng-dev
-          - libre2-dev
-          - libsdbus-c++-dev
-          - libinotify-ocaml-dev
-          - libxcb-xfixes0-dev
-          - libxcb-icccm4-dev
-          - libxcb-composite0-dev
-          - libxcb-res0-dev
-          - libxcb-errors-dev
-          - meson
-          - qt6-base-dev
-          - qt6-declarative-dev
-          - qt6-declarative-private-dev
-          - qt6-wayland-dev
-          - qt6-wayland-private-dev
-        state: latest
+- name: Install Hyprland and Wayland ecosystem packages
+  become: true
+  ansible.builtin.pacman:
+    name:
+      - hyprland
+      - hyprlock
+      - hyprpaper
+      - hypridle
+      - xdg-desktop-portal-hyprland
+      - wl-clipboard
+      - dunst
+      - rofi
+      - playerctl
+      - brightnessctl
+      - network-manager-applet
+      - wofi
+    state: present
 
-- name: Install/Upgrade hyprwayland-scanner
-  block:
-    - name: Clone/Update hyprwayland-scanner
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprwayland-scanner"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprwayland-scanner'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprwayland_scanner
-      changed_when: true
-      notify:
-        - Generate hyprwayland-scanner build files
-        - Build hyprwayland-scanner
-        - Install hyprwayland-scanner
-
-- name: Install/Upgrade hyprutils
-  block:
-    - name: Clone/Update hyprutils
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprutils"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprutils'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprutils
-      changed_when: true
-      notify:
-        - Generate hyprutils build files
-        - Build hyprutils
-        - Install hyprutils
-
-- name: Install/Upgrade Aquamarine
-  block:
-    - name: Clone/Update Aquamarine
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/aquamarine"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/aquamarine'
-        depth: 1
-        version: "main"
-        force: true
-      register: aquamarine
-      changed_when: true
-      notify:
-        - Generate Aquamarine build files
-        - Build Aquamarine
-        - Install Aquamarine
-
-- name: Install/Upgrade hyprlang
-  block:
-    - name: Clone/Update hyprlang
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprlang"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprlang'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprlang
-      changed_when: true
-      notify:
-        - Generate hyprlang build files
-        - Build hyprlang
-        - Install hyprlang
-
-- name: Install/Upgrade hyprcursor
-  block:
-    - name: Clone/Update hyprcursor
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprcursor"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprcursor'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprcursor
-      changed_when: true
-      notify:
-        - Generate hyprcursor build files
-        - Build hyprcursor
-        - Install hyprcursor
-
-- name: Install/Upgrade hyprgraphics
-  block:
-    - name: Clone/Update hyprgraphics
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprgraphics"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprgraphics'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprgraphics
-      changed_when: true
-      notify:
-        - Generate hyprgraphics build files
-        - Build hyprgraphics
-        - Install hyprgraphics
-
-- name: Install/Upgrade Hyprland
-  block:
-    - name: Clone/Update Hyprland
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/Hyprland"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/Hyprland'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprland
-      changed_when: true
-      notify:
-        - Build Hyprland
-        - Install Hyprland
-
-- name: Install/Upgrade hypridle
-  block:
-    - name: Clone/Update hypridle
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hypridle"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hypridle'
-        depth: 1
-        version: "main"
-        force: true
-      register: hypridle
-      changed_when: true
-      notify:
-        - Generate hypridle build files
-        - Build hypridle
-        - Install hypridle
-
-- name: Install/Upgrade hyprland-protocols
-  block:
-    - name: Clone/Update hyprland-protocols
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprland-protocols"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprland-protocols'
-        depth: 1
-        version: "main"
-        force: true
-      register: protocols
-      changed_when: true
-      notify:
-        - Generate hyprland-protocols build files
-        - Install hyprland-protocols
-
-- name: Install/Upgrade hyprland-qtutils
-  block:
-    - name: Clone/Update hyprland-qtutils
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprland-qtutils"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprland-qtutils'
-        depth: 1
-        version: "main"
-        force: true
-      register: qtutils
-      changed_when: true
-      notify:
-        - Generate hyprland-qtutils build files
-        - Build hyprland-qtutils
-        - Install hyprland-qtutils
-
-- name: Install/Upgrade hyprlock
-  block:
-    - name: Clone/Update hyprlock
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprlock"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprlock'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprlock
-      changed_when: true
-      notify:
-        - Generate hyprlock build files
-        - Build hyprlock
-        - Install hyprlock
-
-- name: Install/Upgrade hyprpaper
-  block:
-    - name: Clone/Update hyprpaper
-      ansible.builtin.git:
-        repo: "https://github.com/hyprwm/hyprpaper"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/hyprpaper'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprpaper
-      changed_when: true
-      notify:
-        - Generate hyprpaper build files
-        - Build hyprpaper
-        - Install hyprpaper
-
-- name: Install/Upgrade Hyprshot
+- name: Install Hyprshot
   block:
     - name: Clone/Update Hyprshot
       ansible.builtin.git:
@@ -240,5 +29,57 @@
         force: true
       register: hyprshot
       changed_when: true
-      notify:
-        - Install Hyprshot
+
+    - name: Link Hyprshot to local bin
+      ansible.builtin.file:
+        src: '{{ lookup("env", "HOME") }}/.hyprland/Hyprshot/hyprshot'
+        dest: '{{ lookup("env", "HOME") }}/.local/bin/hyprshot'
+        state: link
+        force: true
+
+- name: Ensure backgrounds directory exists
+  ansible.builtin.file:
+    path: '{{ lookup("env", "HOME") }}/.local/share/backgrounds'
+    state: directory
+    mode: "0755"
+
+- name: Link left background
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/i3wm/files/Space_expanded.png"
+    dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Space_expanded.png'
+    state: link
+    force: true
+
+- name: Link right background
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/i3wm/files/Stellar_expanded.png"
+    dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Stellar_expanded.png'
+    state: link
+    force: true
+
+- name: Create Hyprland config directory
+  ansible.builtin.file:
+    path: '{{ lookup("env", "HOME") }}/.config/hypr'
+    state: directory
+    mode: "0755"
+
+- name: Link hyprland.conf
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprland.conf.link"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprland.conf'
+    state: link
+    force: true
+
+- name: Copy hyprland custom config (only if not already present)
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/roles/hyprland/files/custom.conf"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/custom.conf'
+    mode: "0644"
+    force: false
+
+- name: Link hyprpaper.conf
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprpaper.conf.link"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprpaper.conf'
+    state: link
+    force: true

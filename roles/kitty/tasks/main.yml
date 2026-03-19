@@ -1,8 +1,8 @@
 # file: roles/vim/tasks/main.yml
-- name: Install kitty | apt
+- name: Install kitty | pacman
   become: true
   become_user: root
-  apt:
+  ansible.builtin.pacman:
     name: kitty
     state: present
 
