@@ -1,0 +1,21 @@
+
+# Basic hyprlock.conf
+background {
+    color = rgba(25, 20, 20, 1.0) 
+}
+
+label {
+    text = $TIME
+    font_size = 100
+    position = 0, -80
+    halign = center
+    valign = center
+}
+
+input-field {
+    size = 200, 50
+    outline_thickness = 3
+    position = 0, 80
+    halign = center
+    valign = center
+}

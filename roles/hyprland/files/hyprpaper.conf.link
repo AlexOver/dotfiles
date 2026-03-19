@@ -1,15 +1,6 @@
 # hyprpaper configuration
 # See https://wiki.hyprland.org/Hypr-Ecosystem/hyprpaper/ for reference
 
-# Preload wallpapers into memory
-preload = ~/.local/share/backgrounds/Space_expanded.png
-preload = ~/.local/share/backgrounds/Stellar_expanded.png
+wallpaper = DP-1, ~/.local/share/backgrounds/Stellar_expanded.png, fill
+wallpaper = DP-2, ~/.local/share/backgrounds/Space_expanded.png, fill
 
-# Set wallpapers per monitor (adjust monitor names to match your setup)
-wallpaper = DP-4,~/.local/share/backgrounds/Space_expanded.png
-wallpaper = DP-2,~/.local/share/backgrounds/Stellar_expanded.png
-
-# Fallback wallpaper for any other connected monitor
-wallpaper = ,~/.local/share/backgrounds/Space_expanded.png
-
-splash = false

@@ -70,6 +70,20 @@
     state: link
     force: true
 
+- name: Link hyprlock.conf
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprlock.conf.link"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprland.conf'
+    state: link
+    force: true
+
+- name: Link powermenu.sh
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/hyprland/files/powermenu.sh.link"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprland.conf'
+    state: link
+    force: true
+
 - name: Copy hyprland custom config (only if not already present)
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/roles/hyprland/files/custom.conf"

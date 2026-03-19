@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+set -eu
+
+# Entries shown in the menu
+choices="Lock, Log out, Reboot, Power off, Cancel"
+
+# Ask HyprLauncher to present a dmenu-like prompt
+# If your hyprlauncher needs different flags, share `hyprlauncher --help`.
+choice="$(printf "%b" | hyprlauncher -o "$choices")" || exit 0
+
+case "$choice" in
+"Lock")
+  exec hyprlock
+  ;;
+"Log out")
+  hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit
+  ;;
+"Reboot")
+  systemctl reboot
+  ;;
+"Power off")
+  systemctl poweroff
+  ;;
+*)
+  exit 0
+  ;;
+esac
