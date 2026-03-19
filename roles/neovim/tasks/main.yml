@@ -9,9 +9,9 @@
         version: "stable"
         force: yes
 
-    - name: Install gettext | apt
+    - name: Install gettext | pacman
       become: true
-      apt:
+      ansible.builtin.pacman:
         name: gettext
         state: present
 

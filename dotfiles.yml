@@ -8,9 +8,9 @@
     - role: scripts
       tags:
         - scripts
-    - role: i3wm
-      tags:
-        - i3wm
+    # - role: i3wm
+    #   tags:
+    #     - i3wm
     - role: kitty
       tags:
         - kitty
@@ -23,6 +23,6 @@
     - role: neovim
       tags:
         - neovim
-    # - role: hyprland
-    #   tags:
-    #     - hyprland
+    - role: hyprland
+      tags:
+        - hyprland

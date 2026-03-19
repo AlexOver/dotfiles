@@ -2,14 +2,14 @@
 - name: Install ZSH
   become: true
   become_user: root
-  ansible.builtin.apt:
+  ansible.builtin.pacman:
     name: zsh
     state: present
 
 - name: Install ripgrep
   become: true
   become_user: root
-  ansible.builtin.apt:
+  ansible.builtin.pacman:
     name: ripgrep
     state: present
 
@@ -82,13 +82,22 @@
         src: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}.zip'
         dest: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
 
+    - name: Ensure user fonts directory exists
+      ansible.builtin.file:
+        path: '{{ lookup("env", "HOME") }}/.local/share/fonts'
+        state: directory
+        mode: "0755"
+
     - name: Link Jetbrains Mono Font
-      become: true
       ansible.builtin.file:
         src: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
-        dest: "/usr/share/fonts/truetype/cousine"
+        dest: '{{ lookup("env", "HOME") }}/.local/share/fonts/JetBrainsMono'
         state: link
         force: true
+
+    - name: Refresh font cache
+      ansible.builtin.command: fc-cache -f '{{ lookup("env", "HOME") }}/.local/share/fonts'
+      changed_when: false
 
 - name: Attempt to download oh-my-posh
   block:

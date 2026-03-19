@@ -1,8 +1,8 @@
 # file: roles/tmux/tasks/main.yml
-- name: Install tmux | apt
+- name: Install tmux | pacman
   become: yes
   become_user: root
-  apt:
+  ansible.builtin.pacman:
     name: tmux
     state: present
 

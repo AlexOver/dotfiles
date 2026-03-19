@@ -1,0 +1,231 @@
+# Hyprland configuration
+# See https://wiki.hyprland.org/Configuring/Configuring-Hyprland/ for reference
+
+################
+### MONITORS ###
+################
+
+# Default monitor config - customise per-system in custom.conf
+monitor=,preferred,auto,1
+
+###################
+### MY PROGRAMS ###
+###################
+
+$terminal = kitty
+$fileManager = nautilus
+$menu = rofi -show drun
+
+#################
+### AUTOSTART ###
+#################
+
+exec-once = dunst
+exec-once = hypridle
+exec-once = hyprpaper
+exec-once = nm-applet
+
+#####################
+### LOOK AND FEEL ###
+#####################
+
+general {
+    gaps_in = 5
+    gaps_out = 5
+    border_size = 2
+    col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
+    col.inactive_border = rgba(595959aa)
+    layout = dwindle
+    allow_tearing = false
+}
+
+decoration {
+    rounding = 5
+    blur {
+        enabled = true
+        size = 3
+        passes = 1
+    }
+    shadow {
+        enabled = true
+        range = 4
+        render_power = 3
+        color = rgba(1a1a1aee)
+    }
+}
+
+animations {
+    enabled = yes
+    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
+    animation = windows, 1, 7, myBezier
+    animation = windowsOut, 1, 7, default, popin 80%
+    animation = border, 1, 10, default
+    animation = fade, 1, 7, default
+    animation = workspaces, 1, 6, default
+}
+
+dwindle {
+    pseudotile = yes
+    preserve_split = yes
+}
+
+misc {
+    force_default_wallpaper = 0
+}
+
+#############
+### INPUT ###
+#############
+
+input {
+    kb_options = caps:escape
+    follow_mouse = 1
+    sensitivity = 0
+    repeat_delay = 300
+    repeat_rate = 50
+}
+
+####################
+### KEYBINDINGS  ###
+####################
+
+$mainMod = ALT
+
+# Terminal
+bind = $mainMod, Return, exec, $terminal
+
+# Kill window
+bind = $mainMod SHIFT, Q, killactive
+
+# Fullscreen
+bind = $mainMod, F, fullscreen
+
+# Toggle floating
+bind = $mainMod SHIFT, Space, togglefloating
+
+# Focus mode toggle (floating/tiled)
+bind = $mainMod, Space, focusurgentorlast
+
+# Application launcher
+bind = $mainMod, D, exec, $menu
+
+# File manager
+bind = $mainMod SHIFT, D, exec, $fileManager
+
+# Screenshot (region)
+bind = $mainMod SHIFT, S, exec, hyprshot -m region
+
+# Lock screen
+bind = SUPER, L, exec, hyprlock
+
+# Power menu
+bind = $mainMod SHIFT, Escape, exec, wlogout
+
+# Reload Hyprland config
+bind = $mainMod SHIFT, C, exec, hyprctl reload
+
+# Focus navigation (vim style)
+bind = $mainMod, H, movefocus, l
+bind = $mainMod, J, movefocus, d
+bind = $mainMod, K, movefocus, u
+bind = $mainMod, L, movefocus, r
+
+# Focus navigation (arrow keys)
+bind = $mainMod, left, movefocus, l
+bind = $mainMod, down, movefocus, d
+bind = $mainMod, up, movefocus, u
+bind = $mainMod, right, movefocus, r
+
+# Move windows (vim style)
+bind = $mainMod SHIFT, H, movewindow, l
+bind = $mainMod SHIFT, J, movewindow, d
+bind = $mainMod SHIFT, K, movewindow, u
+bind = $mainMod SHIFT, L, movewindow, r
+
+# Move windows (arrow keys)
+bind = $mainMod SHIFT, left, movewindow, l
+bind = $mainMod SHIFT, down, movewindow, d
+bind = $mainMod SHIFT, up, movewindow, u
+bind = $mainMod SHIFT, right, movewindow, r
+
+# Move workspace to other monitor
+bind = $mainMod CTRL SHIFT, H, movecurrentworkspacetomonitor, l
+bind = $mainMod CTRL SHIFT, L, movecurrentworkspacetomonitor, r
+bind = $mainMod CTRL SHIFT, left, movecurrentworkspacetomonitor, l
+bind = $mainMod CTRL SHIFT, right, movecurrentworkspacetomonitor, r
+
+# Resize submap
+bind = $mainMod, R, submap, resize
+submap = resize
+binde = , H, resizeactive, -10 0
+binde = , J, resizeactive, 0 10
+binde = , K, resizeactive, 0 -10
+binde = , L, resizeactive, 10 0
+binde = , left, resizeactive, -10 0
+binde = , down, resizeactive, 0 10
+binde = , up, resizeactive, 0 -10
+binde = , right, resizeactive, 10 0
+bind = , Return, submap, reset
+bind = , Escape, submap, reset
+bind = $mainMod, R, submap, reset
+submap = reset
+
+# Switch to workspace
+bind = $mainMod, 1, workspace, 1
+bind = $mainMod, 2, workspace, 2
+bind = $mainMod, 3, workspace, 3
+bind = $mainMod, 4, workspace, 4
+bind = $mainMod, 5, workspace, 5
+bind = $mainMod, 6, workspace, 6
+bind = $mainMod, 7, workspace, 7
+bind = $mainMod, 8, workspace, 8
+bind = $mainMod, 9, workspace, 9
+bind = $mainMod, 0, workspace, 10
+
+# Move container to workspace
+bind = $mainMod SHIFT, 1, movetoworkspace, 1
+bind = $mainMod SHIFT, 2, movetoworkspace, 2
+bind = $mainMod SHIFT, 3, movetoworkspace, 3
+bind = $mainMod SHIFT, 4, movetoworkspace, 4
+bind = $mainMod SHIFT, 5, movetoworkspace, 5
+bind = $mainMod SHIFT, 6, movetoworkspace, 6
+bind = $mainMod SHIFT, 7, movetoworkspace, 7
+bind = $mainMod SHIFT, 8, movetoworkspace, 8
+bind = $mainMod SHIFT, 9, movetoworkspace, 9
+bind = $mainMod SHIFT, 0, movetoworkspace, 10
+
+# Scroll through workspaces with mouse wheel
+bind = $mainMod, mouse_down, workspace, e+1
+bind = $mainMod, mouse_up, workspace, e-1
+
+# Audio controls (PipeWire/PulseAudio via pactl)
+bind = , XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +10%
+bind = , XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -10%
+bind = , XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle
+bind = , XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bind = , XF86AudioPlay, exec, playerctl -p spotify play-pause
+bind = , XF86AudioNext, exec, playerctl -p spotify next
+bind = , XF86AudioPrev, exec, playerctl -p spotify previous
+
+# Brightness controls
+bind = , XF86MonBrightnessUp, exec, brightnessctl set +5%
+bind = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
+
+# Mouse bindings for drag/resize
+bindm = $mainMod, mouse:272, movewindow
+bindm = $mainMod, mouse:273, resizewindow
+
+######################
+### WINDOW RULES   ###
+######################
+
+windowrule = float, class:^(nm-connection-editor)$
+windowrule = float, class:^(pavucontrol)$
+
+#########################
+### CUSTOM CONFIG      ###
+#########################
+
+# Source per-machine overrides (monitor layout, workspace assignments, etc.)
+# This file is copied once and never overwritten by the playbook
+source = ~/.config/hypr/custom.conf
