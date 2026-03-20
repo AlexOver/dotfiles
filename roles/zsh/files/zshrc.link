@@ -60,3 +60,9 @@ bindkey -s ^F "tmux_sessionizer\n"
 export TMUX_SESSIONIZER_PATHS=~/dev
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+zstyle ':completion:*' completer _complete _ignored _approximate
+zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' ''
+zstyle ':completion:*' max-errors 2
+zstyle :compinstall filename '/home/ax/.zshrc'
+

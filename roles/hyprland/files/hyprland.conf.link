@@ -15,6 +15,7 @@ monitor = ,preferred, auto, 1
 $terminal = kitty
 $fileManager = dolphin
 $menu = hyprlauncher
+$powerMenu = /home/ax/.config/hypr/scripts/powermenu.sh
 
 #################
 ### AUTOSTART ###
@@ -23,6 +24,7 @@ $menu = hyprlauncher
 exec-once = dunst
 exec-once = hypridle
 exec-once = hyprpaper
+exec-once = waybar
 exec-once = nm-applet
 exec-once = systemctl --user start hyprpolkitagent
 
@@ -92,39 +94,25 @@ input {
 ####################
 
 $mainMod = ALT
+$mainShift = $mainMod SHIFT
+$subMod = SUPER
+$subShift = $subMod SHIFT
 
-# Terminal
-bind = $mainMod, Return, exec, $terminal
+# MainMod + Keys
+bind = $mainMod, Return, exec, $terminal # Terminal
+bind = $mainMod SHIFT, Q, killactive # Kill window
+bind = $mainMod, F, fullscreen # Fullscreen
+bind = $mainMod SHIFT, Space, togglefloating # Toggle floating
+bind = $mainMod, D, exec, $menu # Application launcher
 
-# Kill window
-bind = $mainMod SHIFT, Q, killactive
-
-# Fullscreen
-bind = $mainMod, F, fullscreen
-
-# Toggle floating
-bind = $mainMod SHIFT, Space, togglefloating
-
-# Focus mode toggle (floating/tiled)
-bind = $mainMod, Space, focusurgentorlast
-
-# Application launcher
-bind = $mainMod, D, exec, $menu
-
-# File manager
-bind = $mainMod SHIFT, D, exec, $fileManager
-
-# Screenshot (region)
-bind = $mainMod SHIFT, S, exec, hyprshot -m region
+# MainShift + keys
+bind = $mainShift, D, exec, $fileManager
+bind = $mainShift, Escape, exec, $powerMenu # Power Menu
+bind = $mainShift, P, exec, hyprshot -m region --clipboard-only # Screenshot (region)
+bind = $mainShift, C, exec, hyprctl reload # Reload Hyprland config
 
 # Lock screen
 bind = SUPER, L, exec, hyprlock
-
-# Power menu
-bind = $mainMod SHIFT, Escape, exec, wlogout
-
-# Reload Hyprland config
-bind = $mainMod SHIFT, C, exec, hyprctl reload
 
 # Focus navigation (vim style)
 bind = $mainMod, H, movefocus, l
@@ -183,6 +171,7 @@ bind = $mainMod, 7, workspace, 7
 bind = $mainMod, 8, workspace, 8
 bind = $mainMod, 9, workspace, 9
 bind = $mainMod, 0, workspace, 10
+bind = $mainMod, S, togglespecialworkspace, magic
 
 # Move container to workspace
 bind = $mainMod SHIFT, 1, movetoworkspace, 1
@@ -195,14 +184,15 @@ bind = $mainMod SHIFT, 7, movetoworkspace, 7
 bind = $mainMod SHIFT, 8, movetoworkspace, 8
 bind = $mainMod SHIFT, 9, movetoworkspace, 9
 bind = $mainMod SHIFT, 0, movetoworkspace, 10
+bind = $mainMod SHIFT, S, movetoworkspace, special:magic
 
 # Scroll through workspaces with mouse wheel
 bind = $mainMod, mouse_down, workspace, e+1
 bind = $mainMod, mouse_up, workspace, e-1
 
 # Audio controls (PipeWire/PulseAudio via pactl)
-bind = , XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +10%
-bind = , XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -10%
+bind = , XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%
+bind = , XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%
 bind = , XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle
 bind = , XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bind = , XF86AudioPlay, exec, playerctl -p spotify play-pause
