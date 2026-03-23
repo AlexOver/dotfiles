@@ -106,6 +106,7 @@ bind = $mainMod SHIFT, Space, togglefloating # Toggle floating
 bind = $mainMod, D, exec, $menu # Application launcher
 
 # MainShift + keys
+bind = $mainShift, Return, exec, [float] $terminal # Terminal as floating
 bind = $mainShift, D, exec, $fileManager
 bind = $mainShift, Escape, exec, $powerMenu # Power Menu
 bind = $mainShift, P, exec, hyprshot -m region --clipboard-only # Screenshot (region)
