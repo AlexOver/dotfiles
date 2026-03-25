@@ -62,6 +62,13 @@
     state: link
     force: yes
 
+- name: Link telescope.lua
+  file:
+    src: "{{ playbook_dir }}/roles/neovim/files/telescope.lua.link"
+    dest: '{{ lookup("env", "HOME") }}/.config/nvim/lua/plugins/telescope.lua'
+    state: link
+    force: yes
+
 - name: Attempt to download Lazygit
   block:
     - name: Determine latest Github release of Lazygit
