@@ -16,6 +16,8 @@
       - playerctl
       - brightnessctl
       - network-manager-applet
+      - archlinux-xdg-menu
+      - gnome-calculator
     state: present
 
 - name: Install Hyprshot
@@ -45,14 +47,14 @@
 
 - name: Link left background
   ansible.builtin.file:
-    src: "{{ playbook_dir }}/roles/i3wm/files/Space_expanded.png"
+    src: "{{ playbook_dir }}/roles/hyprland/files/Space_expanded.png"
     dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Space_expanded.png'
     state: link
     force: true
 
 - name: Link right background
   ansible.builtin.file:
-    src: "{{ playbook_dir }}/roles/i3wm/files/Stellar_expanded.png"
+    src: "{{ playbook_dir }}/roles/hyprland/files/Stellar_expanded.png"
     dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/Stellar_expanded.png'
     state: link
     force: true

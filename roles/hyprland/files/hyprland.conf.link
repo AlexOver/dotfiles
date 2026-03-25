@@ -28,6 +28,8 @@ exec-once = waybar
 exec-once = nm-applet
 exec-once = systemctl --user start hyprpolkitagent
 
+env = XDG_MENU_PREFIX,arch-
+
 #####################
 ### LOOK AND FEEL ###
 #####################
@@ -106,11 +108,11 @@ bind = $mainMod SHIFT, Space, togglefloating # Toggle floating
 bind = $mainMod, D, exec, $menu # Application launcher
 
 # MainShift + keys
-bind = $mainShift, Return, exec, [float] $terminal # Terminal as floating
+bind = $mainShift, Return, exec, [size 800 600; float] $terminal # Terminal as floating
 bind = $mainShift, D, exec, $fileManager
 bind = $mainShift, Escape, exec, $powerMenu # Power Menu
-bind = $mainShift, P, exec, hyprshot -m region --clipboard-only # Screenshot (region)
-bind = $mainShift, C, exec, hyprctl reload # Reload Hyprland config
+bind = $mainMod, P, exec, hyprshot -m region --clipboard-only
+bind = $mainShift, C, exec, [float] gnome-calculator
 
 # Lock screen
 bind = SUPER, L, exec, hyprlock
