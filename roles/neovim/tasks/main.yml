@@ -55,19 +55,17 @@
     dest: '{{ lookup("env", "HOME") }}/.config/nvim'
   when: not nvim_stat.stat.exists
 
-- name: Link undotree.lua
+- name: Link multiple config files
   file:
-    src: "{{ playbook_dir }}/roles/neovim/files/undotree.lua.link"
-    dest: '{{ lookup("env", "HOME") }}/.config/nvim/lua/plugins/undotree.lua'
+    src: "{{ playbook_dir }}/roles/neovim/files/{{ item.src }}"
+    dest: "{{ lookup('env', 'HOME') }}/.config/nvim/{{ item.dest }}"
     state: link
     force: yes
-
-- name: Link telescope.lua
-  file:
-    src: "{{ playbook_dir }}/roles/neovim/files/telescope.lua.link"
-    dest: '{{ lookup("env", "HOME") }}/.config/nvim/lua/plugins/telescope.lua'
-    state: link
-    force: yes
+  loop:
+    - { src: "undotree.lua.link", dest: "lua/plugins/undotree.lua" }
+    - { src: "telescope.lua.link", dest: "lua/plugins/telescope.lua" }
+    - { src: "lazy-lock.json.link", dest: "lazy-lock.json" }
+    - { src: "lazyvim.json.link", dest: "lazyvim.json" }
 
 - name: Attempt to download Lazygit
   block:

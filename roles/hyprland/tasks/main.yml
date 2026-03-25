@@ -2,7 +2,7 @@
 
 - name: Install Hyprland and Wayland ecosystem packages
   become: true
-  ansible.builtin.pacman:
+  ansible.builtin.package:
     name:
       - hyprland
       - hyprlock
@@ -19,7 +19,10 @@
       - archlinux-xdg-menu
       - gnome-calculator
       - qt6ct
+      - cmake
+      - ninja
     state: present
+  when: ansible_facts['distribution'] == 'Archlinux'
 
 - name: Install Hyprshot
   block:

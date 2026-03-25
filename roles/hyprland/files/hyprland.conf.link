@@ -130,6 +130,14 @@ bind = $mainMod, down, movefocus, d
 bind = $mainMod, up, movefocus, u
 bind = $mainMod, right, movefocus, r
 
+# Cycle forward (Alt+Tab)
+bind = ALT, Tab, cyclenext,
+bind = ALT, Tab, bringactivetotop,
+
+# Cycle backward (Alt+Shift+Tab)
+bind = ALT SHIFT, Tab, cyclenext, prev
+bind = ALT SHIFT, Tab, bringactivetotop,
+
 # Move windows (vim style)
 bind = $mainMod SHIFT, H, movewindow, l
 bind = $mainMod SHIFT, J, movewindow, d

@@ -1,60 +1,21 @@
 # file: roles/requirements/tasks/main.yml
-- name: Install clang
+- name: Install Work requirements
   become: true
-  ansible.builtin.pacman:
-    name: clang
-    state: present
-
-- name: Install cmake
-  become: true
-  ansible.builtin.pacman:
-    name: cmake
-    state: present
-
-- name: Install curl
-  become: true
-  ansible.builtin.pacman:
-    name: curl
-    state: present
-
-- name: Install gcc
-  become: true
-  ansible.builtin.pacman:
-    name: gcc
-    state: present
-
-- name: Install git
-  become: true
-  ansible.builtin.pacman:
-    name: git
-    state: present
-
-- name: Install python
-  become: true
-  ansible.builtin.pacman:
-    name: python
-    state: present
-
-- name: Install python-pip
-  become: true
-  ansible.builtin.pacman:
-    name: python-pip
-    state: present
-
-- name: Install Node.js
-  become: true
-  ansible.builtin.pacman:
-    name: nodejs
-    state: present
-
-- name: Install zip
-  become: true
-  ansible.builtin.pacman:
-    name: zip
-    state: present
-
-- name: Install unzip
-  become: true
-  ansible.builtin.pacman:
-    name: zip
+  ansible.builtin.package:
+    name:
+      - clang
+      - cmake
+      - curl
+      - gcc
+      - git
+      - python
+      - python-pip
+      - nodejs
+      - zip
+      - unzip
+      - copyq
+      - eza
+      - less
+      - rsync
+      - wl-clipboard
     state: present

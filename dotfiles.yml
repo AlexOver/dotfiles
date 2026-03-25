@@ -5,6 +5,9 @@
     - role: requirements
       tags:
         - requirements
+    - role: hyprland
+      tags:
+        - hyprland
     - role: scripts
       tags:
         - scripts
@@ -20,6 +23,3 @@
     - role: neovim
       tags:
         - neovim
-    - role: hyprland
-      tags:
-        - hyprland
