@@ -18,6 +18,7 @@
       - network-manager-applet
       - archlinux-xdg-menu
       - gnome-calculator
+      - qt6ct
     state: present
 
 - name: Install Hyprshot
