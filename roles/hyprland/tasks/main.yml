@@ -49,6 +49,16 @@
     state: directory
     mode: "0755"
 
+- name: Link multiple config files
+  file:
+    src: "{{ playbook_dir }}/roles/hyprland/files/{{ item.src }}"
+    dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/{{ item.dest }}'
+    state: link
+    force: yes
+  loop:
+    - { src: "Space_expanded.png", dest: "Space_expanded.png" }
+    - { src: "Stellar_expanded.png", dest: "Stellar_expanded.png" }
+
 - name: Link left background
   ansible.builtin.file:
     src: "{{ playbook_dir }}/roles/hyprland/files/Space_expanded.png"
