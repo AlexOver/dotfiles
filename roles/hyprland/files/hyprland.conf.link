@@ -21,23 +21,32 @@ $powerMenu = /home/ax/.config/hypr/scripts/powermenu.sh
 ### AUTOSTART ###
 #################
 
-exec-once = dunst
+exec-once = copyq --start-server
 exec-once = hypridle
+exec-once = solaar -w hide
+exec-once = dunst
 exec-once = hyprpaper
 exec-once = waybar
 exec-once = nm-applet
 exec-once = systemctl --user start hyprpolkitagent
 
+#############################
+### ENVIRONMENT VARIABLES ###
+#############################
+
+# See https://wiki.hyprland.org/Configuring/Environment-variables/
+
 env = XDG_MENU_PREFIX,arch-
 env = QT_QPA_PLATFORMTHEME,qt6ct
+env = GTK_THEME,Adwaita:dark
 
 #####################
 ### LOOK AND FEEL ###
 #####################
 
 general {
-    gaps_in = 5
-    gaps_out = 5
+    gaps_in = 2
+    gaps_out = 3
     border_size = 2
     col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
     col.inactive_border = rgba(595959aa)
