@@ -64,7 +64,6 @@
   loop:
     - { src: "undotree.lua.link", dest: "lua/plugins/undotree.lua" }
     - { src: "telescope.lua.link", dest: "lua/plugins/telescope.lua" }
-    - { src: "lazy-lock.json.link", dest: "lazy-lock.json" }
     - { src: "lazyvim.json.link", dest: "lazyvim.json" }
 
 - name: Attempt to download Lazygit

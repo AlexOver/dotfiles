@@ -9,6 +9,9 @@
       - hyprpaper
       - hypridle
       - hyprlauncher
+      - hyprshot
+      - polkit-kde-agent
+      - waybar
       - xdg-desktop-portal-hyprland
       - wl-clipboard
       - dunst
@@ -21,27 +24,10 @@
       - qt6ct
       - cmake
       - ninja
+      - git
+      - base-devel
     state: present
   when: ansible_facts['distribution'] == 'Archlinux'
-
-- name: Install Hyprshot
-  block:
-    - name: Clone/Update Hyprshot
-      ansible.builtin.git:
-        repo: "https://github.com/Gustash/Hyprshot"
-        dest: '{{ lookup("env", "HOME") }}/.hyprland/Hyprshot'
-        depth: 1
-        version: "main"
-        force: true
-      register: hyprshot
-      changed_when: true
-
-    - name: Link Hyprshot to local bin
-      ansible.builtin.file:
-        src: '{{ lookup("env", "HOME") }}/.hyprland/Hyprshot/hyprshot'
-        dest: '{{ lookup("env", "HOME") }}/.local/bin/hyprshot'
-        state: link
-        force: true
 
 - name: Ensure backgrounds directory exists
   ansible.builtin.file:
@@ -79,6 +65,20 @@
     state: link
     force: true
 
+- name: Check for script folder | stat
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.config/hypr/scripts"
+  register: scripts_stat
+
+- name: Create scripts directory if missing | folder
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config/hypr/scripts" 
+    recurse: true
+    state: directory
+    mode: '0755'
+  when: not scripts_stat.stat.exists
+
+
 - name: Link powermenu.sh
   ansible.builtin.file:
     src: "{{ playbook_dir }}/roles/hyprland/files/scripts/powermenu.sh.link"
@@ -99,3 +99,31 @@
     dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprpaper.conf'
     state: link
     force: true
+
+- name: Check if yay folder exists | stat
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/stuff/yay.git"
+  register: yay_stat
+
+- name: Install yay
+  block:
+    - name: Clone yay
+      shell: "git clone https://aur.archlinux.org/yay.git"
+      args:
+        chdir: '{{ lookup("env", "HOME") }}/stuff'
+      when: not scripts_stat.stat.exists
+
+    - name: Install yay
+      command:
+        argv:
+          - "makepkg"
+          - "-si"
+        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
+      when: not scripts_stat.stat.exists
+
+    - name: first time config
+      shell: "yay -Y --gendb && yay -Syu --devel && yay -Y --devel --save"
+      args:
+        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
+      when: not scripts_stat.stat.exists
+

@@ -4,6 +4,7 @@ font_size     13.0
 foreground #dddddd
 background #222222
 background_opacity 0.9
+color1 #721efa
 
 enable_audio_bell no
 
