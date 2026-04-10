@@ -1,4 +1,12 @@
 # file: roles/neovim/tasks/main.yml
+- name: Install neovim dependancies
+  become: true
+  ansible.builtin.package:
+    name:
+      - npm
+    state: present
+  when: ansible_facts['distribution'] == 'Archlinux'
+
 - name: Install Neovim
   block:
     - name: Clone/Update Neovim
