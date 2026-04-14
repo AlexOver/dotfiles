@@ -121,11 +121,14 @@ bind = $mainMod, D, exec, $menu # Application launcher
 bind = $mainShift, Return, exec, [size 800 600; float] $terminal # Terminal as floating
 bind = $mainShift, D, exec, $fileManager
 bind = $mainShift, Escape, exec, $powerMenu # Power Menu
-bind = $mainMod, P, exec, hyprshot -m region --clipboard-only
 bind = $mainShift, C, exec, [float] gnome-calculator
 
 # Lock screen
 bind = SUPER, L, exec, hyprlock
+
+# Screenshot
+ bind =$mainMod, P, exec, grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Documents/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000 # screenshot of a region 
+ bind =$mainShift, P, exec, grim - | wl-copy && wl-paste > ~/Documents/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of whole screen taken" -t 1000 # screenshot of the whole screen
 
 # Focus navigation (vim style)
 bind = $mainMod, H, movefocus, l
