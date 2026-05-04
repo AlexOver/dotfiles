@@ -26,6 +26,7 @@
       - ninja
       - git
       - base-devel
+      - noto-fonts-emoji
     state: present
   when: ansible_facts['distribution'] == 'Archlinux'
 
@@ -72,12 +73,11 @@
 
 - name: Create scripts directory if missing | folder
   file:
-    path: "{{ lookup('env', 'HOME') }}/.config/hypr/scripts" 
+    path: "{{ lookup('env', 'HOME') }}/.config/hypr/scripts"
     recurse: true
     state: directory
-    mode: '0755'
+    mode: "0755"
   when: not scripts_stat.stat.exists
-
 
 - name: Link powermenu.sh
   ansible.builtin.file:
@@ -126,4 +126,3 @@
       args:
         chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
       when: not scripts_stat.stat.exists
-
