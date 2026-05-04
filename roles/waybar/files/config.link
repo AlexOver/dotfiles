@@ -1,0 +1,6 @@
+{
+  "include": [
+    "~/.config/waybar/config.local",
+    "~/.config/waybar/config.base"
+  ]
+}

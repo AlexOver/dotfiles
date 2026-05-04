@@ -1,0 +1,56 @@
+# file: roles/waybar/tasks/main.yml
+
+- name: Install Waybar helper packages
+  become: true
+  ansible.builtin.package:
+    name:
+      # Used by on-click actions in the Waybar config
+      - kitty
+      - btop
+      - networkmanager
+      - pavucontrol
+    state: present
+  when: ansible_facts['distribution'] == 'Archlinux'
+
+- name: Check for .config folder | stat
+  ansible.builtin.stat:
+    path: "{{ lookup('env', 'HOME') }}/.config"
+  register: config_stat
+
+- name: Create .config directory if missing | file
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.config"
+    state: directory
+    mode: "0755"
+  when: not config_stat.stat.exists
+
+- name: Check for waybar folder | stat
+  ansible.builtin.stat:
+    path: "{{ lookup('env', 'HOME') }}/.config/waybar"
+  register: waybar_stat
+
+- name: Create waybar directory if missing | file
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.config/waybar"
+    state: directory
+    mode: "0755"
+  when: not waybar_stat.stat.exists
+
+- name: Link Waybar config files
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/waybar/files/{{ item.src }}"
+    dest: "{{ lookup('env', 'HOME') }}/.config/waybar/{{ item.dest }}"
+    state: link
+    force: true
+  loop:
+    - { src: "config.link", dest: "config" }
+    - { src: "config.base.link", dest: "config.base" }
+    - { src: "style.css.link", dest: "style.css" }
+    - { src: "window_pill.py.link", dest: "window_pill.py" }
+
+- name: Create per-machine Waybar overrides if missing
+  ansible.builtin.copy:
+    content: "{}\n"
+    dest: "{{ lookup('env', 'HOME') }}/.config/waybar/config.local"
+    mode: "0644"
+    force: false
