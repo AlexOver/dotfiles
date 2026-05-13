@@ -27,6 +27,14 @@
       - git
       - base-devel
       - noto-fonts-emoji
+      - thunar
+      - gvfs #thunar-plugin
+      - sshfs #thunar-plugin
+      - tumbler #thunar-plugin
+      - ffmpegthumbnailer #thunar-plugin
+      - thunar-media-tags-plugin #thunar-plugin
+      - adw-gtk-theme
+
     state: present
   when: ansible_facts['distribution'] == 'Archlinux'
 
