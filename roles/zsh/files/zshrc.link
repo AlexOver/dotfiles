@@ -74,3 +74,5 @@ zstyle :compinstall filename '/home/ax/.zshrc'
 
 # opencode
 export PATH=/home/ax/.opencode/bin:$PATH
+export ARMGCC_DIR=/home/ax/.local/opt/arm/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi
+export EDITOR="nvim"

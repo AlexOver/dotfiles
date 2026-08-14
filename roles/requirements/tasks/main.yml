@@ -5,17 +5,20 @@
     name:
       - clang
       - cmake
+      - copyq
       - curl
+      - eza
       - gcc
       - git
+      - gnome-keyring
+      - less
+      - noto-fonts-emoji
       - python
       - python-pip
-      - nodejs
-      - zip
-      - unzip
-      - copyq
-      - eza
-      - less
+      - qt6ct
       - rsync
+      - seahorse
+      - unzip
+      - nodejs
       - wl-clipboard
     state: present

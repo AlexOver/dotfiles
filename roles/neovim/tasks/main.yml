@@ -4,6 +4,7 @@
   ansible.builtin.package:
     name:
       - npm
+      - gettext
     state: present
   when: ansible_facts['distribution'] == 'Archlinux'
 
@@ -16,12 +17,6 @@
         depth: 1
         version: "stable"
         force: yes
-
-    - name: Install gettext | pacman
-      become: true
-      ansible.builtin.pacman:
-        name: gettext
-        state: present
 
     - name: Build Neovim
       command:
@@ -70,9 +65,9 @@
     state: link
     force: yes
   loop:
-    - { src: "undotree.lua.link", dest: "lua/plugins/undotree.lua" }
     - { src: "telescope.lua.link", dest: "lua/plugins/telescope.lua" }
     - { src: "lazyvim.json.link", dest: "lazyvim.json" }
+    - { src: "keymaps.lua.link", dest: "lua/plugins/keymaps.lua" }
 
 - name: Attempt to download Lazygit
   block:

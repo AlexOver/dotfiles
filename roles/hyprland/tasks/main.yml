@@ -29,14 +29,17 @@
       - git
       - base-devel
       - noto-fonts-emoji
+      - adw-gtk-theme
       - thunar
+      - thunar-archive-plugin #thunar-plugin
+      - thunar-media-tags-plugin #thunar-plugin
+      - thunar-shares-plugin #thunar-plugin
+      - thunar-volman #thunar-plugin
       - gvfs #thunar-plugin
+      - gvfs-mtp #thunar-plugin
       - sshfs #thunar-plugin
       - tumbler #thunar-plugin
       - ffmpegthumbnailer #thunar-plugin
-      - thunar-media-tags-plugin #thunar-plugin
-      - adw-gtk-theme
-
     state: present
   when: ansible_facts['distribution'] == 'Archlinux'
 

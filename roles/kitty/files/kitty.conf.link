@@ -8,4 +8,4 @@ color1 #e38801
 
 enable_audio_bell no
 
-scrollback_lines 100000
+clipboard_control write-clipboard write-primary no-append
