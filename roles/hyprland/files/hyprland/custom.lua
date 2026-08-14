@@ -28,3 +28,6 @@
 -- 	match = { class = "slack" },
 -- 	workspace = 9,
 -- })
+
+-- Default monitor config - customise per-system in custom.lua
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
