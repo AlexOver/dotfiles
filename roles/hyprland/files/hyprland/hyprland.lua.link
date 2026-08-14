@@ -1,0 +1,223 @@
+-- Hyprland configuration (migrated from hyprlang to Lua, Hyprland 0.55+)
+-- See https://wiki.hypr.land/Configuring/Start/ for reference
+
+------------------
+---- MONITORS ----
+------------------
+
+-- Default monitor config - customise per-system in custom.lua
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
+
+---------------------
+---- MY PROGRAMS ----
+---------------------
+
+local terminal = "kitty"
+local fileManager = "thunar"
+local menu = "hyprlauncher"
+local powerMenu = "/home/ax/.config/hypr/scripts/powermenu.sh"
+
+-------------------
+---- AUTOSTART ----
+-------------------
+
+hl.on("hyprland.start", function()
+	hl.exec_cmd("copyq --start-server")
+	hl.exec_cmd("hypridle")
+	hl.exec_cmd("solaar -w hide")
+	hl.exec_cmd("swaync")
+	hl.exec_cmd("hyprpaper")
+	hl.exec_cmd("waybar")
+	hl.exec_cmd("nm-applet")
+	hl.exec_cmd("systemctl --user start hyprpolkitagent")
+end)
+
+-------------------------------
+---- ENVIRONMENT VARIABLES ----
+-------------------------------
+
+hl.env("XDG_MENU_PREFIX", "arch-")
+hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
+hl.env("GTK_THEME", "Adwaita:dark")
+hl.env("WEBKIT_DISABLE_DMABUF_RENDERER", "1")
+
+-----------------------
+---- LOOK AND FEEL ----
+-----------------------
+
+hl.config({
+	general = {
+		gaps_in = 2,
+		gaps_out = 3,
+		border_size = 2,
+		col = {
+			active_border = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
+			inactive_border = "rgba(595959aa)",
+		},
+		layout = "dwindle",
+		allow_tearing = false,
+	},
+
+	decoration = {
+		rounding = 5,
+		blur = { enabled = true, size = 3, passes = 1 },
+		shadow = { enabled = true, range = 4, render_power = 3, color = 0xee1a1a1a },
+	},
+
+	animations = { enabled = true },
+})
+
+hl.curve("myBezier", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.05 } } })
+
+hl.animation({ leaf = "windows", enabled = true, speed = 7, bezier = "myBezier" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 7, bezier = "default", style = "popin 80%" })
+hl.animation({ leaf = "border", enabled = true, speed = 10, bezier = "default" })
+hl.animation({ leaf = "fade", enabled = true, speed = 7, bezier = "default" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default" })
+
+hl.config({
+	dwindle = { preserve_split = true },
+	misc = { force_default_wallpaper = 0 },
+})
+
+--------------
+---- INPUT ----
+--------------
+
+hl.config({
+	input = {
+		kb_layout = "no",
+		kb_options = "caps:escape",
+		follow_mouse = 1,
+		sensitivity = 0,
+		repeat_delay = 300,
+		repeat_rate = 50,
+	},
+})
+
+---------------------
+---- KEYBINDINGS ----
+---------------------
+
+local mainMod = "ALT"
+local mainShift = mainMod .. " + SHIFT"
+-- subMod/subShift were declared but unused in the original config too - kept for parity
+local subMod = "SUPER"
+local subShift = subMod .. " + SHIFT"
+
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
+hl.bind(mainShift .. " + Q", hl.dsp.window.close())
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
+hl.bind(mainShift .. " + Space", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
+
+-- TODO verify: hyprlang supported dispatcher-scoped rules like `[size 800 600; float] cmd` to
+-- spawn just this one window floating at a fixed size. hl.dsp.exec_cmd() does not document that,
+-- so for now this just launches the terminal without the floating/size override.
+-- Check https://wiki.hypr.land/Configuring/Basics/Window-Rules/ for the 0.55+ equivalent.
+hl.bind(mainShift .. " + Return", hl.dsp.exec_cmd(terminal))
+hl.bind(mainShift .. " + D", hl.dsp.exec_cmd(fileManager))
+hl.bind(mainShift .. " + Escape", hl.dsp.exec_cmd(powerMenu))
+-- TODO verify (same caveat as above, was `[float] gnome-calculator`):
+hl.bind(mainShift .. " + C", hl.dsp.exec_cmd("gnome-calculator"))
+
+hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"))
+
+hl.bind(
+	mainMod .. " + CTRL + S",
+	hl.dsp.exec_cmd(
+		'grim -g "$(slurp)" - | wl-copy && wl-paste > ~/Documents/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of the region taken" -t 1000'
+	)
+)
+hl.bind(
+	mainShift .. " + P",
+	hl.dsp.exec_cmd(
+		'grim - | wl-copy && wl-paste > ~/Documents/Pictures/Screenshots/Screenshot-$(date +%F_%T).png | dunstify "Screenshot of whole screen taken" -t 1000'
+	)
+)
+
+-- Focus navigation (vim + arrow keys)
+hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
+hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
+
+-- Alt-Tab cycling
+hl.bind("ALT + Tab", hl.dsp.window.cycle_next())
+hl.bind("ALT + Tab", hl.dsp.window.bring_to_top())
+-- TODO verify: `next = false` is the best match found for "reverse direction" (old: `cyclenext, prev`).
+hl.bind("ALT + SHIFT + Tab", hl.dsp.window.cycle_next({ next = false }))
+hl.bind("ALT + SHIFT + Tab", hl.dsp.window.bring_to_top())
+
+-- Move windows (vim + arrow keys)
+hl.bind(mainShift .. " + H", hl.dsp.window.move({ direction = "left" }))
+hl.bind(mainShift .. " + J", hl.dsp.window.move({ direction = "down" }))
+hl.bind(mainShift .. " + K", hl.dsp.window.move({ direction = "up" }))
+hl.bind(mainShift .. " + L", hl.dsp.window.move({ direction = "right" }))
+hl.bind(mainShift .. " + left", hl.dsp.window.move({ direction = "left" }))
+hl.bind(mainShift .. " + down", hl.dsp.window.move({ direction = "down" }))
+hl.bind(mainShift .. " + up", hl.dsp.window.move({ direction = "up" }))
+hl.bind(mainShift .. " + right", hl.dsp.window.move({ direction = "right" }))
+
+-- Move workspace to other monitor
+-- TODO verify: monitor = "l"/"r" relative tokens against the Dispatchers wiki page.
+hl.bind(mainMod .. " + CTRL + SHIFT + H", hl.dsp.workspace.move({ monitor = "l" }))
+hl.bind(mainMod .. " + CTRL + SHIFT + L", hl.dsp.workspace.move({ monitor = "r" }))
+hl.bind(mainMod .. " + CTRL + SHIFT + left", hl.dsp.workspace.move({ monitor = "l" }))
+hl.bind(mainMod .. " + CTRL + SHIFT + right", hl.dsp.workspace.move({ monitor = "r" }))
+
+-- Resize submap
+hl.bind(mainMod .. " + R", hl.dsp.submap("resize"))
+hl.define_submap("resize", function()
+	hl.bind("H", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
+	hl.bind("J", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true })
+	hl.bind("K", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })
+	hl.bind("L", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })
+	hl.bind("left", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
+	hl.bind("down", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true })
+	hl.bind("up", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })
+	hl.bind("right", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })
+	hl.bind("Return", hl.dsp.submap("reset"))
+	hl.bind("Escape", hl.dsp.submap("reset"))
+	hl.bind(mainMod .. " + R", hl.dsp.submap("reset"))
+end)
+
+-- Switch to / move to workspace
+for i = 1, 10 do
+	local key = i % 10 -- 10 maps to key 0
+	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
+	hl.bind(mainShift .. " + " .. key, hl.dsp.window.move({ workspace = i }))
+end
+hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
+hl.bind(mainShift .. " + S", hl.dsp.window.move({ workspace = "special:magic" }))
+
+-- Scroll through workspaces with mouse wheel
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+
+-- Audio controls (PipeWire/PulseAudio via pactl) - no locked/repeating flags, matching the original
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"))
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -5%"))
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl -p spotify play-pause"))
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl -p spotify next"))
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl -p spotify previous"))
+
+-- Brightness controls
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set +5%"))
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"))
+
+-- Mouse bindings for drag/resize
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+------------------------
+---- CUSTOM CONFIGS ----
+------------------------
+
+require("custom")

@@ -1,0 +1,30 @@
+-- Custom Hyprland configuration
+-- This file is copied once and never overwritten by the playbook.
+-- Customize it per-machine for your specific monitor setup.
+
+-- Dual monitor setup example - adjust monitor names to match your hardware.
+-- Run 'hyprctl monitors' to list available outputs.
+-- example:
+-- hl.monitor({ output = "DP-1", mode = "preferred", position = "auto", scale = 1 })
+-- hl.monitor({ output = "DP-2", mode = "preferred", position = "0x0", scale = 1 })
+--
+-- -- Assign workspaces to monitors
+-- -- example:
+--
+-- hl.workspace_rule({ workspace = 1, monitor = "DP-2", default = true })
+-- hl.workspace_rule({ workspace = 2, monitor = "DP-2" })
+-- hl.workspace_rule({ workspace = 4, monitor = "DP-2" })
+-- hl.workspace_rule({ workspace = 9, monitor = "DP-2" })
+--
+-- hl.workspace_rule({ workspace = 3, monitor = "DP-1", default = true })
+-- hl.workspace_rule({ workspace = 10, monitor = "DP-1" })
+--
+-- hl.on("hyprland.start", function()
+-- 	hl.exec_cmd("slack")
+-- end)
+--
+-- hl.window_rule({
+-- 	name = "Slack to workspace 9",
+-- 	match = { class = "slack" },
+-- 	workspace = 9,
+-- })

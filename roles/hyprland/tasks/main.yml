@@ -5,16 +5,18 @@
   ansible.builtin.package:
     name:
       - hyprland
-      - hyprlock
       - hyprpaper
-      - hypridle
       - hyprlauncher
+      - hypridle
+      - hyprlock
+      - xdg-desktop-portal-hyprland
+      - hyprland-qt-support
       - hyprshot
+      - hyprshutdown
       - polkit-kde-agent
       - waybar
-      - xdg-desktop-portal-hyprland
       - wl-clipboard
-      - dunst
+      - swaync
       - rofi
       - playerctl
       - brightnessctl
@@ -46,7 +48,7 @@
 
 - name: Link multiple config files
   file:
-    src: "{{ playbook_dir }}/roles/hyprland/files/{{ item.src }}"
+    src: "{{ playbook_dir }}/roles/hyprland/files/wallpapers/{{ item.src }}"
     dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/{{ item.dest }}'
     state: link
     force: yes
@@ -60,16 +62,16 @@
     state: directory
     mode: "0755"
 
-- name: Link hyprland.conf
+- name: Link hyprland.lua
   ansible.builtin.file:
-    src: "{{ playbook_dir }}/roles/hyprland/files/hyprland.conf.link"
-    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprland.conf'
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprland/hyprland.lua.link"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprland.lua'
     state: link
     force: true
 
 - name: Link hyprlock.conf
   ansible.builtin.file:
-    src: "{{ playbook_dir }}/roles/hyprland/files/hyprlock.conf.link"
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprlock/hyprlock.conf.link"
     dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprlock.conf'
     state: link
     force: true
@@ -89,21 +91,21 @@
 
 - name: Link powermenu.sh
   ansible.builtin.file:
-    src: "{{ playbook_dir }}/roles/hyprland/files/scripts/powermenu.sh.link"
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprland/scripts/powermenu.sh.link"
     dest: '{{ lookup("env", "HOME") }}/.config/hypr/scripts/powermenu.sh'
     state: link
     force: true
 
-- name: Copy hyprland custom config (only if not already present)
+- name: Copy hyprland custom config (lua, only if not already present)
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/roles/hyprland/files/custom.conf"
-    dest: '{{ lookup("env", "HOME") }}/.config/hypr/custom.conf'
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprland/custom.lua"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/custom.lua'
     mode: "0644"
     force: false
 
 - name: Link hyprpaper.conf
   ansible.builtin.file:
-    src: "{{ playbook_dir }}/roles/hyprland/files/hyprpaper.conf.link"
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprpaper/hyprpaper.conf.link"
     dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprpaper.conf'
     state: link
     force: true

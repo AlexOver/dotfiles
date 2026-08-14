@@ -10,16 +10,16 @@ choice="$(printf "%b" | hyprlauncher -o "$choices")" || exit 0
 
 case "$choice" in
 "Lock")
-  exec hyprlock
+  hyprlock
   ;;
 "Log out")
-  hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit
+  hyprshutdown --vt 2
   ;;
 "Reboot")
-  systemctl reboot
+  hyprshutdown -t 'Restarting...' --post-cmd 'reboot'
   ;;
 "Power off")
-  systemctl poweroff
+  hyprshutdown -t 'Shutting Down...' --post-cmd 'shutdown -P 0'
   ;;
 *)
   exit 0
