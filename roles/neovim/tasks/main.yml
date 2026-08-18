@@ -67,7 +67,7 @@
   loop:
     - { src: "telescope.lua.link", dest: "lua/plugins/telescope.lua" }
     - { src: "lazyvim.json.link", dest: "lazyvim.json" }
-    - { src: "keymaps.lua.link", dest: "lua/plugins/keymaps.lua" }
+    - { src: "keymaps.lua.link", dest: "lua/config/keymaps.lua" }
 
 - name: Attempt to download Lazygit
   block:
