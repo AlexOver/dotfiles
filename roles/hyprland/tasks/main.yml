@@ -40,6 +40,7 @@
       - sshfs #thunar-plugin
       - tumbler #thunar-plugin
       - ffmpegthumbnailer #thunar-plugin
+      - syncthing
     state: present
   when: ansible_facts['distribution'] == 'Archlinux'
 
