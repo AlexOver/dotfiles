@@ -1,0 +1,3 @@
+os:
+  edit: "nvim --server $NVIM --remote-send '<cmd>close<CR>' && nvim --server $NVIM --remote {{filename}}"
+  editAtLine: "nvim --server $NVIM --remote-send '<cmd>close<CR>' && nvim --server $NVIM --remote {{filename}} && nvim --server $NVIM --remote-send ':{{line}}<CR>'"

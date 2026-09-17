@@ -58,16 +58,29 @@
     dest: '{{ lookup("env", "HOME") }}/.config/nvim'
   when: not nvim_stat.stat.exists
 
-- name: Link multiple config files
-  file:
+- name: Copy multiple config files (only if not already present)
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/roles/neovim/files/{{ item.src }}"
     dest: "{{ lookup('env', 'HOME') }}/.config/nvim/{{ item.dest }}"
-    state: link
-    force: yes
+    mode: "0644"
+    force: false
   loop:
-    - { src: "telescope.lua.link", dest: "lua/plugins/telescope.lua" }
-    - { src: "lazyvim.json.link", dest: "lazyvim.json" }
-    - { src: "keymaps.lua.link", dest: "lua/config/keymaps.lua" }
+    - { src: "telescope.lua", dest: "lua/plugins/telescope.lua" }
+    - { src: "lazyvim.json", dest: "lazyvim.json" }
+    - { src: "keymaps.lua", dest: "lua/config/keymaps.lua" }
+
+- name: Ensure lazygit config directory exists
+  ansible.builtin.file:
+    path: '{{ lookup("env", "HOME") }}/.config/lazygit'
+    state: directory
+    mode: "0755"
+
+- name: Copy lazygit config (only if not already present)
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/roles/neovim/files/lazygit_config.yml"
+    dest: '{{ lookup("env", "HOME") }}/.config/lazygit/config.yml'
+    mode: "0644"
+    force: false
 
 - name: Attempt to download Lazygit
   block:
