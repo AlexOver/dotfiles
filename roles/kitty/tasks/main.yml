@@ -1,4 +1,4 @@
-# file: roles/vim/tasks/main.yml
+# file: roles/kitty/tasks/main.yml
 - name: Install kitty
   become: true
   become_user: root
@@ -36,3 +36,63 @@
     dest: '{{ lookup("env", "HOME") }}/.config/kitty/kitty.conf'
     state: link
     force: yes
+
+- name: Install JetBrains Mono
+  block:
+    - name: Determine latest Github release of Nerd Fonts
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest"
+        body_format: json
+      register: _nerdfonts_release
+      until: _nerdfonts_release.status == 200
+      retries: 5
+
+    - name: Set nerdfonts_version
+      ansible.builtin.set_fact:
+        nerdfonts_version: '{{ _nerdfonts_release.json.tag_name | regex_replace("^v", "") }}'
+
+    - name: Show latest nerdfonts version
+      ansible.builtin.debug:
+        msg: "Latest version: {{ nerdfonts_version }}"
+      when: nerdfonts_version is defined
+
+    - name: Ensure fonts directory exists
+      ansible.builtin.file:
+        path: '{{ lookup("env", "HOME") }}/.local/fonts'
+        state: directory
+        mode: "0755"
+
+    - name: Download JetBrains Mono Font
+      ansible.builtin.get_url:
+        url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v{{ nerdfonts_version }}/JetBrainsMono.zip"
+        dest: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}.zip'
+        mode: "0644"
+      when: nerdfonts_version is defined
+
+    - name: Ensure JetBrains Mono directory exists
+      ansible.builtin.file:
+        path: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
+        state: directory
+        mode: "0755"
+
+    - name: Extract JetBrains Mono Font
+      ansible.builtin.unarchive:
+        src: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}.zip'
+        dest: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
+
+    - name: Ensure user fonts directory exists
+      ansible.builtin.file:
+        path: '{{ lookup("env", "HOME") }}/.local/share/fonts'
+        state: directory
+        mode: "0755"
+
+    - name: Link Jetbrains Mono Font
+      ansible.builtin.file:
+        src: '{{ lookup("env", "HOME") }}/.local/fonts/JetBrainsMono.v{{ nerdfonts_version }}'
+        dest: '{{ lookup("env", "HOME") }}/.local/share/fonts/JetBrainsMono'
+        state: link
+        force: true
+
+    - name: Refresh font cache
+      ansible.builtin.command: fc-cache -f '{{ lookup("env", "HOME") }}/.local/share/fonts'
+      changed_when: false
