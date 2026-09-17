@@ -5,7 +5,6 @@
   ansible.builtin.package:
     name:
       # Used by on-click actions in the Waybar config
-      - kitty
       - btop
       - networkmanager
       - pavucontrol

@@ -3,6 +3,7 @@
   become: true
   ansible.builtin.package:
     name:
+      - base-devel
       - clang
       - cmake
       - copyq
@@ -12,6 +13,7 @@
       - git
       - gnome-keyring
       - less
+      - ninja
       - noto-fonts-emoji
       - python
       - python-pip

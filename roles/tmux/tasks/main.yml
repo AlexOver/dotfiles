@@ -11,3 +11,9 @@
     dest: '{{ lookup("env", "HOME") }}/.tmux.conf'
     state: link
     force: yes
+
+- name: Checkout tpm (tmux plugin manager)
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    depth: 1
+    dest: '{{ lookup("env", "HOME") }}/.tmux/plugins/tpm'
