@@ -1,0 +1,26 @@
+# file: roles/yay/tasks/main.yml
+- name: Check if yay is installed
+  ansible.builtin.command: which yay
+  register: yay_installed
+  failed_when: false
+  changed_when: false
+
+- name: Install yay
+  when: yay_installed.rc != 0
+  block:
+    - name: Clone yay
+      ansible.builtin.shell: "git clone https://aur.archlinux.org/yay.git"
+      args:
+        chdir: '{{ lookup("env", "HOME") }}/stuff'
+
+    - name: Run makepkg for yay
+      ansible.builtin.command:
+        argv:
+          - "makepkg"
+          - "-si"
+        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
+
+    - name: first time config
+      ansible.builtin.shell: "yay -Y --gendb && yay -Syu --devel && yay -Y --devel --save"
+      args:
+        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'

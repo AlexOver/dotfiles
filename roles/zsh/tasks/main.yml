@@ -1,43 +1,35 @@
 # file: roles/zsh/tasks/main.yml
 - name: Install ZSH
   become: true
-  become_user: root
   ansible.builtin.pacman:
     name: zsh
     state: present
 
 - name: Install ripgrep
   become: true
-  become_user: root
   ansible.builtin.pacman:
     name: ripgrep
     state: present
 
 - name: Attempt to set ZSH as default shell for current user
   become: true
-  become_user: root
   block:
     - name: Set ZSH as default shell for current user
       ansible.builtin.command: usermod -s /bin/zsh {{ lookup('env', 'USER') }}
       register: zsh_default_shell
       failed_when: zsh_default_shell.rc >= 1
       changed_when: zsh_default_shell.rc == 0
+      when: lookup('env', 'SHELL') != '/bin/zsh'
   rescue:
     - name: Print error message if default shell could not be set | debug
       ansible.builtin.debug:
         msg: 'Could not set ZSH as default shell for user {{ lookup("env", "USER") }}. Please set it manually.'
-
-- name: Check for .local/bin directory
-  ansible.builtin.stat:
-    path: "{{ lookup('env', 'HOME') }}/.local/bin"
-  register: local_bin_stat
 
 - name: Create .local/bin directory if missing
   ansible.builtin.file:
     path: '{{ lookup("env", "HOME") }}/.local/bin'
     state: directory
     mode: "0755"
-  when: not local_bin_stat.stat.exists
 
 - name: Attempt to download oh-my-posh
   block:
@@ -62,23 +54,27 @@
       ansible.builtin.command: oh-my-posh --version
       register: ohmyposh_installed_version
       when: ohmyposh_stat.stat.exists
-      changed_when: true
+      changed_when: false
 
     - name: Show installed version of oh-my-posh
       ansible.builtin.debug:
         msg: "Installed version: {{ ohmyposh_installed_version.stdout }}"
       when: ohmyposh_installed_version.stdout is defined
 
-    - name: Show lastest version of oh-my-posh
+    - name: Show latest version of oh-my-posh
       ansible.builtin.debug:
         msg: "Latest version: {{ ohmyposh_version }}"
       when: ohmyposh_version is defined
 
+    - name: Determine oh-my-posh release architecture
+      ansible.builtin.set_fact:
+        ohmyposh_arch: "{{ {'x86_64': 'amd64', 'aarch64': 'arm64', 'armv7l': 'arm'}[ansible_facts['architecture']] }}"
+
     - name: Download and verify SHA256 checksum
       ansible.builtin.get_url:
-        url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/posh-linux-amd64"
+        url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/posh-linux-{{ ohmyposh_arch }}"
         dest: '{{ lookup("env", "HOME") }}/.local/bin/oh-my-posh'
-        #checksum: 'sha256:https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/posh-linux-amd64.sha256'
+        checksum: 'sha256:https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/checksums.txt'
         mode: "0755"
       when: (ohmyposh_installed_version.stdout is not defined) or (ohmyposh_installed_version.stdout != ohmyposh_version)
 
@@ -102,13 +98,20 @@
     state: link
     force: true
 
+- name: Check if fzf is installed
+  ansible.builtin.stat:
+    path: '{{ lookup("env", "HOME") }}/.fzf/bin/fzf'
+  register: fzf_stat
+
 - name: Checkout fzf
   ansible.builtin.git:
     repo: "https://github.com/junegunn/fzf.git"
     depth: 1
     dest: '{{ lookup("env", "HOME") }}/.fzf'
     force: true
+  when: not fzf_stat.stat.exists
 
 - name: Install fzf
   ansible.builtin.raw: '{{ lookup("env", "HOME") }}/.fzf/install --all'
   changed_when: true
+  when: not fzf_stat.stat.exists

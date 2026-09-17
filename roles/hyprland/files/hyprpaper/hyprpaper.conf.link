@@ -3,12 +3,12 @@
 
 wallpaper{
   monitor = DP-1
-  path = /home/ax/.local/share/backgrounds/Stellar_expanded.png
+  path = ~/.local/share/backgrounds/Stellar_expanded.png
   fit_mode = cover
 }
 
 wallpaper{
   monitor = DP-2
-  path = /home/ax/.local/share/backgrounds/Space_expanded.png
+  path = ~/.local/share/backgrounds/Space_expanded.png
   fit_mode = cover
 }

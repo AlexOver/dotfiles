@@ -8,6 +8,9 @@
     - role: hyprland
       tags:
         - hyprland
+    - role: yay
+      tags:
+        - yay
     - role: waybar
       tags:
         - waybar

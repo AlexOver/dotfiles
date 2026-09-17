@@ -1,13 +1,12 @@
 # file: roles/tmux/tasks/main.yml
 - name: Install tmux | pacman
   become: yes
-  become_user: root
   ansible.builtin.pacman:
     name: tmux
     state: present
 
 - name: Link .tmux.conf | file
-  file:
+  ansible.builtin.file:
     src: '{{ playbook_dir }}/roles/tmux/files/tmux.conf.link'
     dest: '{{ lookup("env", "HOME") }}/.tmux.conf'
     state: link

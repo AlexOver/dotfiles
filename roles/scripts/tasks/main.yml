@@ -1,19 +1,13 @@
-# file: roles/vim/tasks/main.yml
-- name: Check for scripts folder | stat
-  stat:
-    path: "{{ lookup('env', 'HOME') }}/.local/scripts"
-  register: scripts_stat
-
+# file: roles/scripts/tasks/main.yml
 - name: Create scripts directory if missing | file
-  file:
+  ansible.builtin.file:
     path: '{{ lookup("env", "HOME") }}/.local/scripts'
     recurse: true
     state: directory
     mode: '0755'
-  when: not scripts_stat.stat.exists
 
 - name: Link tmux_sessionizer | file
-  file:
+  ansible.builtin.file:
     src: '{{ playbook_dir }}/roles/scripts/files/tmux_sessionizer.link'
     dest: '{{ lookup("env", "HOME") }}/.local/scripts/tmux_sessionizer'
     state: link

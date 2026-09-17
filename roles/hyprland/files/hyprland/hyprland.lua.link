@@ -19,7 +19,7 @@ local subShift = subMod .. " + SHIFT"
 local terminal = "kitty"
 local fileManager = "thunar"
 local menu = "hyprlauncher"
-local powerMenu = "/home/ax/.config/hypr/scripts/powermenu.sh"
+local powerMenu = os.getenv("HOME") .. "/.config/hypr/scripts/powermenu.sh"
 
 -------------------
 ---- AUTOSTART ----

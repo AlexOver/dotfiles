@@ -51,7 +51,7 @@
     mode: "0755"
 
 - name: Link multiple config files
-  file:
+  ansible.builtin.file:
     src: "{{ playbook_dir }}/roles/hyprland/files/wallpapers/{{ item.src }}"
     dest: '{{ lookup("env", "HOME") }}/.local/share/backgrounds/{{ item.dest }}'
     state: link
@@ -80,18 +80,12 @@
     state: link
     force: true
 
-- name: Check for script folder | stat
-  stat:
-    path: "{{ lookup('env', 'HOME') }}/.config/hypr/scripts"
-  register: scripts_stat
-
 - name: Create scripts directory if missing | folder
-  file:
+  ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.config/hypr/scripts"
     recurse: true
     state: directory
     mode: "0755"
-  when: not scripts_stat.stat.exists
 
 - name: Link powermenu.sh
   ansible.builtin.file:
@@ -113,30 +107,3 @@
     dest: '{{ lookup("env", "HOME") }}/.config/hypr/hyprpaper.conf'
     state: link
     force: true
-
-- name: Check if yay folder exists | stat
-  stat:
-    path: "{{ lookup('env', 'HOME') }}/stuff/yay.git"
-  register: yay_stat
-
-- name: Install yay
-  block:
-    - name: Clone yay
-      shell: "git clone https://aur.archlinux.org/yay.git"
-      args:
-        chdir: '{{ lookup("env", "HOME") }}/stuff'
-      when: not scripts_stat.stat.exists
-
-    - name: Install yay
-      command:
-        argv:
-          - "makepkg"
-          - "-si"
-        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
-      when: not scripts_stat.stat.exists
-
-    - name: first time config
-      shell: "yay -Y --gendb && yay -Syu --devel && yay -Y --devel --save"
-      args:
-        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
-      when: not scripts_stat.stat.exists
