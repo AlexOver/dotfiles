@@ -1,9 +1,16 @@
 -- Hyprland configuration (migrated from hyprlang to Lua, Hyprland 0.55+)
 -- See https://wiki.hypr.land/Configuring/Start/ for reference
 
-------------------
----- MONITORS ----
-------------------
+
+-------------------------
+---- LOCAL VARIABLES ----
+-------------------------
+
+local mainMod = "ALT"
+local mainShift = mainMod .. " + SHIFT"
+local subMod = "SUPER"
+local subShift = subMod .. " + SHIFT"
+
 
 ---------------------
 ---- MY PROGRAMS ----
@@ -97,11 +104,6 @@ hl.config({
 ---- KEYBINDINGS ----
 ---------------------
 
-local mainMod = "ALT"
-local mainShift = mainMod .. " + SHIFT"
--- subMod/subShift were declared but unused in the original config too - kept for parity
-local subMod = "SUPER"
-local subShift = subMod .. " + SHIFT"
 
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
 hl.bind(mainShift .. " + Q", hl.dsp.window.close())
