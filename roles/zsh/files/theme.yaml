@@ -1,0 +1,103 @@
+# $schema: https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+version: 2
+final_space: true
+console_title_template: "{{if .Root}}root :: {{end}}{{.Shell}} :: {{.Folder}}"
+blocks:
+  - type: prompt
+    alignment: left
+    segments:
+      - type: session
+        style: plain
+        template: " {{ .UserName }}@{{ .HostName }} <p:muted></>"
+        foreground: p:fg
+
+      - type: root
+        style: plain
+        template:  <p:muted></>
+        foreground: p:root
+
+      - type: path
+        style: plain
+        template: "  {{ .Path }} "
+        foreground: p:fg
+
+      - type: git
+        style: plain
+        template: >-
+          <p:muted></>  {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{
+          .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} |{{ end }}{{ if .Staging.Changed
+          }}  {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }}
+        foreground: p:git-modified
+
+  - type: prompt
+    alignment: right
+    segments:
+      - type: node
+        style: plain
+        foreground: p:node
+        template: "  {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}<p:muted> </>"
+
+      - type: python
+        style: plain
+        foreground: p:python
+        template: "  {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }}<p:muted> </>"
+
+      - type: dotnet
+        style: plain
+        foreground: p:dotnet
+        template: "  {{ if .Unsupported }}{{ else }}{{ .Full }}{{ end }}<p:muted> </>"
+
+      - type: time
+        style: plain
+        template: "{{ .CurrentDate | date .Format }}  "
+        foreground: p:fg
+
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: text
+        style: plain
+        foreground: p:muted
+        template: ❯
+
+  - type: rprompt
+    alignment: right
+    segments:
+      - type: executiontime
+        style: plain
+        template: "  {{ .FormattedMs }} "
+        foreground: p:status-ok
+
+      - type: status
+        style: plain
+        template: " {{ if eq .Code 0 }}{{ else }} {{ .Code }}{{ end }} "
+        foreground: p:status-ok
+        foreground_templates:
+          - "{{ if eq .Code 0 }}p:error{{ end }}"
+
+transient_prompt:
+  background: transparent
+  foreground: p:muted
+  template: "❯ "
+palette:
+  bg: "#2f2f2f"
+  fg: "#fafafa"
+  muted: "#7a7a7a"
+  os: "#26C6DA"
+  session-user: "#77f5d6"
+  session-host: "#2EEFBF"
+  root: "#ffff66"
+  path-accent: "#f2f200"
+  path-icon: "#B5B2C2"
+  git-modified: "#ffeb3b"
+  git-ahead: "#2EC4B6"
+  git-behind: "#8A4FFF"
+  git-staged: "#2FDA4E"
+  node: "#6CA35E"
+  python: "#96E072"
+  dotnet: "#3891A6"
+  time-accent: "#007ACC"
+  exectime: "#FFCE5C"
+  status-ok: "#9FD356"
+  error: "#E84855"

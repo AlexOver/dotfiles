@@ -6,7 +6,7 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 
-eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/theme.json)"
+eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/theme.yaml)"
 
 # Load plugins
 zinit light Aloxaf/fzf-tab

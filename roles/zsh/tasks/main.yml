@@ -74,7 +74,7 @@
       ansible.builtin.get_url:
         url: "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/posh-linux-{{ ohmyposh_arch }}"
         dest: '{{ lookup("env", "HOME") }}/.local/bin/oh-my-posh'
-        checksum: 'sha256:https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/checksums.txt'
+        checksum: "sha256:https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{{ ohmyposh_version }}/checksums.txt"
         mode: "0755"
       when: (ohmyposh_installed_version.stdout is not defined) or (ohmyposh_installed_version.stdout != ohmyposh_version)
 
@@ -86,8 +86,8 @@
 
     - name: Copy theme if no theme exists
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/roles/zsh/files/slim.json"
-        dest: '{{ lookup("env", "HOME") }}/.config/oh-my-posh/theme.json'
+        src: "{{ playbook_dir }}/roles/zsh/files/theme.yaml"
+        dest: '{{ lookup("env", "HOME") }}/.config/oh-my-posh/theme.yaml'
         mode: "0644"
         force: false
 
