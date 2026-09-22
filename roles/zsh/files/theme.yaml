@@ -49,7 +49,7 @@ blocks:
 
       - type: time
         style: plain
-        template: "{{ .CurrentDate | date .Format }}  "
+        template: "{{ .CurrentDate | date .Format }}   "
         foreground: p:fg
 
   - type: prompt

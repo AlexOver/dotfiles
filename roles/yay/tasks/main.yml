@@ -9,18 +9,18 @@
   when: yay_installed.rc != 0
   block:
     - name: Clone yay
-      ansible.builtin.shell: "git clone https://aur.archlinux.org/yay.git"
+      ansible.builtin.shell: "git clone https://aur.archlinux.org/yay.git .yay"
       args:
-        chdir: '{{ lookup("env", "HOME") }}/stuff'
+        chdir: '{{ lookup("env", "HOME") }}'
 
     - name: Run makepkg for yay
       ansible.builtin.command:
         argv:
           - "makepkg"
           - "-si"
-        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
+        chdir: '{{ lookup("env", "HOME") }}/.yay'
 
     - name: first time config
       ansible.builtin.shell: "yay -Y --gendb && yay -Syu --devel && yay -Y --devel --save"
       args:
-        chdir: '{{ lookup("env", "HOME") }}/stuff/yay'
+        chdir: '{{ lookup("env", "HOME") }}/.yay'
