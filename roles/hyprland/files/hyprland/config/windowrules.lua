@@ -1,0 +1,7 @@
+-- No active window rules today - this is a stub matching dotfilesMothership's structure.
+--
+-- Add rules here with hl.window_rule({ match = {...}, ...props }), e.g.:
+-- hl.window_rule({ match = { class = "gnome-calculator" }, float = true })
+--
+-- For a per-machine-only rule (e.g. pinning a specific app to a workspace on one machine),
+-- put it in custom.lua instead so it isn't force-synced to every machine.

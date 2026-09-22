@@ -1,0 +1,6 @@
+-- No active workspace-to-monitor assignment today - this is a stub matching
+-- dotfilesMothership's structure.
+--
+-- Workspace-to-monitor assignment is hardware-specific, so it belongs in custom.lua
+-- (per-machine, not force-synced). Example there:
+-- hl.workspace_rule({ workspace = 1, monitor = "DP-1", default = true })

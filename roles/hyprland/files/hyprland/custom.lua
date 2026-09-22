@@ -1,9 +1,18 @@
 -- Custom Hyprland configuration
 -- This file is copied once and never overwritten by the playbook.
 -- Customize it per-machine for your specific monitor setup.
+--
+-- This loads right after config.variables / config.colors (see hyprland.lua), so overrides
+-- made here - like MONITOR1 / MONITOR2 below - are visible to config.binds's per-monitor
+-- focus/move keybinds (SUPER+1/2, SUPER+SHIFT+1/2).
+
+-- Override the monitor placeholders from config/variables.lua with your real output names.
+-- Run 'hyprctl monitors' to list them.
+-- example:
+-- MONITOR1 = "eDP-1"
+-- MONITOR2 = "HDMI-A-1"
 
 -- Dual monitor setup example - adjust monitor names to match your hardware.
--- Run 'hyprctl monitors' to list available outputs.
 -- example:
 -- hl.monitor({ output = "DP-1", mode = "preferred", position = "auto", scale = 1 })
 -- hl.monitor({ output = "DP-2", mode = "preferred", position = "0x0", scale = 1 })
@@ -28,6 +37,23 @@
 -- 	match = { class = "slack" },
 -- 	workspace = 9,
 -- })
+
+-- Laptop lid-switch handler example - disables the internal display on close, re-enables
+-- it on open. Adjust `output` to your laptop panel's name (e.g. "eDP-1").
+-- example:
+--
+-- local laptopMonitor = { output = "eDP-1", mode = "preferred", position = "auto", scale = 1 }
+--
+-- function enableLaptopMonitor()
+-- 	hl.monitor(laptopMonitor)
+-- 	hl.exec_cmd("hyprctl reload")
+-- end
+-- hl.bind("switch:off:Lid Switch", enableLaptopMonitor, { locked = true })
+--
+-- function disableLaptopMonitor()
+-- 	hl.monitor({ output = laptopMonitor.output, disabled = true })
+-- end
+-- hl.bind("switch:on:Lid Switch", disableLaptopMonitor, { locked = true })
 
 -- Default monitor config - customise per-system in custom.lua
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })

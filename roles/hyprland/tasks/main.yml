@@ -66,6 +66,13 @@
     state: link
     force: true
 
+- name: Link hyprland config directory
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/roles/hyprland/files/hyprland/config"
+    dest: '{{ lookup("env", "HOME") }}/.config/hypr/config'
+    state: link
+    force: true
+
 - name: Link hyprlock.conf
   ansible.builtin.file:
     src: "{{ playbook_dir }}/roles/hyprland/files/hyprlock/hyprlock.conf.link"

@@ -18,6 +18,36 @@
         version: "stable"
         force: yes
       register: nvim_repo
+      async: 60
+      poll: 5
+      failed_when: false
+
+    - name: Warn when Neovim clone/update timed out
+      ansible.builtin.debug:
+        msg: >-
+          Skipping Neovim update/build this run: clone/update did not finish within 60s
+          (likely a slow/unreachable network path to github.com). Keeping the currently
+          installed nvim as-is.
+      when: nvim_repo.after is not defined
+
+    - name: Check last built Neovim commit
+      ansible.builtin.stat:
+        path: '{{ lookup("env", "HOME") }}/.neovim/.last_build_sha'
+      register: nvim_last_build_stat
+      when: nvim_repo.after is defined
+
+    - name: Read last built Neovim commit
+      ansible.builtin.slurp:
+        src: '{{ lookup("env", "HOME") }}/.neovim/.last_build_sha'
+      register: nvim_last_build_sha_raw
+      when: nvim_repo.after is defined and nvim_last_build_stat.stat.exists
+
+    - name: Determine if Neovim needs (re)building
+      ansible.builtin.set_fact:
+        nvim_needs_build: >-
+          {{ nvim_repo.after is defined and
+             (not nvim_last_build_stat.stat.exists or
+              (nvim_last_build_sha_raw.content | b64decode | trim) != nvim_repo.after) }}
 
     - name: Clean stale Neovim build artifacts before rebuilding
       ansible.builtin.command:
@@ -25,7 +55,7 @@
           - "make"
           - "distclean"
         chdir: '{{ lookup("env", "HOME") }}/.neovim'
-      when: nvim_repo.changed
+      when: nvim_needs_build
 
     - name: Build Neovim
       ansible.builtin.command:
@@ -35,7 +65,7 @@
           - "CMAKE_BUILD_TYPE=RelWithDebInfo"
           - 'CMAKE_INSTALL_PREFIX={{ lookup("env", "HOME") }}/.local'
         chdir: '{{ lookup("env", "HOME") }}/.neovim'
-      when: nvim_repo.changed
+      when: nvim_needs_build
 
     - name: Run make install for Neovim
       ansible.builtin.command:
@@ -43,7 +73,14 @@
           - "make"
           - "install"
         chdir: '{{ lookup("env", "HOME") }}/.neovim'
-      when: nvim_repo.changed
+      when: nvim_needs_build
+
+    - name: Record last built Neovim commit
+      ansible.builtin.copy:
+        content: "{{ nvim_repo.after }}"
+        dest: '{{ lookup("env", "HOME") }}/.neovim/.last_build_sha'
+        mode: "0644"
+      when: nvim_needs_build
 
 - name: Create .config directory if missing | file
   ansible.builtin.file:

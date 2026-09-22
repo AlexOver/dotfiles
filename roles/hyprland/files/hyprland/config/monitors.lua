@@ -1,0 +1,11 @@
+-- Monitor hardware config intentionally does NOT live here.
+--
+-- This file is symlinked and shared across every machine this repo provisions, but monitor
+-- output names, positions, and scale are per-machine. Those live in custom.lua instead, which
+-- Ansible copies once (force: false) and never overwrites, so each machine keeps its own setup.
+--
+-- See custom.lua for:
+--   - the active hl.monitor({...}) call(s)
+--   - MONITOR1 / MONITOR2 global overrides (consumed by binds.lua's per-monitor focus/move keys)
+--   - a commented-out laptop lid-switch handler example, if you want one
+
