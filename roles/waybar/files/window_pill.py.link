@@ -6,6 +6,7 @@ import json
 import subprocess
 import html
 import re
+import time
 
 # Configuration
 MAX_TITLE_LEN = 42
@@ -77,22 +78,29 @@ def print_status():
     )
 
 
-# Initial Run
-print_status()
+EVENTS = ("activewindow>>", "workspace>>", "closewindow>>")
 
-# Listen to Hyprland Socket for instant updates
+
+def listen(socket_path):
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+        client.connect(socket_path)
+        for line in client.makefile("r", encoding="utf-8", errors="ignore"):
+            if line.startswith(EVENTS):
+                print_status()
+
+
 hypr_sig = os.getenv("HYPRLAND_INSTANCE_SIGNATURE")
 if not hypr_sig:
     sys.exit(1)
 
-socket_path = f"/tmp/hypr/{hypr_sig}/.socket2.sock"
+runtime_dir = os.getenv("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}"
+socket_path = f"{runtime_dir}/hypr/{hypr_sig}/.socket2.sock"
 
-if os.path.exists(socket_path):
-    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
-        client.connect(socket_path)
-        while True:
-            data = client.recv(1024).decode("utf-8", errors="ignore")
-            if not data:
-                break
-            if "activewindow>>" in data or "workspace>>" in data:
-                print_status()
+print_status()
+
+while True:
+    try:
+        listen(socket_path)
+    except OSError:
+        pass
+    time.sleep(1)

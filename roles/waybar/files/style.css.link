@@ -6,6 +6,7 @@
 * {
    border: none;
   padding: 0px;
+  color: @fg;
   font-family: 'JetBrainsMono Nerd Font Propo';
   font-size: 10px;
   font-weight: bold;
