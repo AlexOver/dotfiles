@@ -25,6 +25,8 @@
       - adw-gtk-theme
       - thunar
       - thunar-archive-plugin #thunar-plugin
+      - file-roller #thunar-plugin
+      - unrar #thunar-plugin
       - thunar-media-tags-plugin #thunar-plugin
       - thunar-shares-plugin #thunar-plugin
       - thunar-volman #thunar-plugin
